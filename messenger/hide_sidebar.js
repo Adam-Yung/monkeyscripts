@@ -37,6 +37,7 @@ GM_addStyle(`
 
     function find_thread_list() {
         let threadList = document.querySelector('[role="navigation"][aria-label="Thread list"]');
+        console.log("find_thread_list: ", threadList);
         return (threadList) ? threadList : null;
     }
 
@@ -70,9 +71,8 @@ GM_addStyle(`
     let run = false;
     function add_thread_list_toggle(thread_list) {
         if (run) {
-            return;
+            return true;
         }
-        run = true;
         if (thread_list) {
             // thread_list.style.display = 'none';
 
@@ -86,9 +86,11 @@ GM_addStyle(`
 				inbox_button.addEventListener('click', () => {
 					console.log("Run add_thread_list_toggle again after each keypress on inbox_button");
 					setTimeout(() => {
-					add_thread_list_toggle(thread_list);
+                        run = false;
+                        add_thread_list_toggle(thread_list);
 					}, 100);
 				});
+                run = true;
             }
             else {
                 console.log("Target element for button placement NOT found.");
@@ -101,28 +103,33 @@ GM_addStyle(`
         return true;
     }
 
-    let thread_list_check;
-
-    function start_thread_list_check() {
+    let thread_list_check, max_run = 10;
+    let thread_list;
+    (function() {
         clearInterval(thread_list_check); // Clear any existing interval
         thread_list_check = setInterval(() => {
+            if (max_run <= 0) {
+                console.log("Failed to add button over 10 times, stop...");
+                clearInterval(thread_list_check);
+                thread_list_check = null; // Important: Reset the variable
+            }
+            --max_run;
+
             console.log("Finding thread list div");
-            let thread_list = find_thread_list();
+            thread_list = find_thread_list();
 
             if (thread_list) {
                 console.log("Found, adding toggle button");
-                clearInterval(thread_list_check);
-                thread_list_check = null; // Important: Reset the variable
-                add_thread_list_toggle(thread_list);
+                if (add_thread_list_toggle(thread_list)) {
+                    clearInterval(thread_list_check);
+                    thread_list_check = null; // Important: Reset the variable
+                }
             } else {
                 console.log("Cannot find thread list div");
             }
         }, 500);
-    }
+    })();
 
-    // Start checking for the message box after the page loads.
-    start_thread_list_check();
-    // window.on
     console.log("Init %s finished", extension_name);
 
 })();
