@@ -27,7 +27,20 @@ GM_addStyle(`
 	.toggle-button-class {
 		margin-right: 5px;
 		margin-bottom: 7.5px;
-}
+    }
+    @media (prefers-color-scheme: dark) {
+        .toggle-button-class {
+            stroke: #ffffff;
+            fill: #ffffff;
+        }
+    }
+    @media (prefers-color-scheme: light) {
+        .toggle-button-class {
+            stroke: #000000;
+            fill: #000000;
+        }
+    }
+
 `);
 
 (function() {
@@ -37,30 +50,38 @@ GM_addStyle(`
 
     function find_thread_list() {
         let threadList = document.querySelector('[role="navigation"][aria-label="Thread list"]');
-        console.log("find_thread_list: ", threadList);
+        // console.log("find_thread_list: ", threadList);
         return (threadList) ? threadList : null;
     }
 
+    
+    // Create the new button
+    let new_button = null;
     function create_new_toggle(button, thread) {
-        const toggleButton = button.cloneNode(true);
+        let old_button = document.querySelector('[aria-label="Thread List Button"]');
+        if (old_button) {
+            console.log("Button already exists, not adding again");
+            return;
+        }
+        new_button = button.cloneNode(true);
         // Optionally change aria-label or icon path if needed
-        toggleButton.setAttribute('aria-label', 'Thread List Button');
-        toggleButton.style.marginTop = '10px';
+        new_button.setAttribute('aria-label', 'Thread List Button');
+        new_button.style.marginTop = '10px';
         // 2. Find the <svg> and its <path>
-        const svg = toggleButton.querySelector('svg');
+        const svg = new_button.querySelector('svg');
         const paths = svg.querySelectorAll('path');
 
         // Remove old paths
         paths.forEach(path => path.remove());
-        toggleButton.innerHTML = '<svg class="toggle-button-class" fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)" stroke="#000000" stroke-width="1.2"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.70710678,12 L8.85355339,15.1464466 C9.04881554,15.3417088 9.04881554,15.6582912 8.85355339,15.8535534 C8.65829124,16.0488155 8.34170876,16.0488155 8.14644661,15.8535534 L4.14644661,11.8535534 C3.95118446,11.6582912 3.95118446,11.3417088 4.14644661,11.1464466 L8.14644661,7.14644661 C8.34170876,6.95118446 8.65829124,6.95118446 8.85355339,7.14644661 C9.04881554,7.34170876 9.04881554,7.65829124 8.85355339,7.85355339 L5.70710678,11 L16.5,11 C16.7761424,11 17,11.2238576 17,11.5 C17,11.7761424 16.7761424,12 16.5,12 L5.70710678,12 Z M19,3.5 C19,3.22385763 19.2238576,3 19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 C19.2238576,20 19,19.7761424 19,19.5 L19,3.5 Z"></path> </g></svg>'
+        new_button.innerHTML = '<svg class="toggle-button-class" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)" stroke-width="1.2"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.70710678,12 L8.85355339,15.1464466 C9.04881554,15.3417088 9.04881554,15.6582912 8.85355339,15.8535534 C8.65829124,16.0488155 8.34170876,16.0488155 8.14644661,15.8535534 L4.14644661,11.8535534 C3.95118446,11.6582912 3.95118446,11.3417088 4.14644661,11.1464466 L8.14644661,7.14644661 C8.34170876,6.95118446 8.65829124,6.95118446 8.85355339,7.14644661 C9.04881554,7.34170876 9.04881554,7.65829124 8.85355339,7.85355339 L5.70710678,11 L16.5,11 C16.7761424,11 17,11.2238576 17,11.5 C17,11.7761424 16.7761424,12 16.5,12 L5.70710678,12 Z M19,3.5 C19,3.22385763 19.2238576,3 19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 C19.2238576,20 19,19.7761424 19,19.5 L19,3.5 Z"></path> </g></svg>'
 
-        button.parentNode.insertBefore(toggleButton, button.nextSibling);
+        button.parentNode.insertBefore(new_button, button.nextSibling);
 
         const original_display = window.getComputedStyle(thread).getPropertyValue('display');
 		console.log("Original display value: ");
 		console.log(original_display);
 		let isHidden = (original_display === "none");
-        toggleButton.addEventListener('click', () => {
+        new_button.addEventListener('click', () => {
             isHidden = !isHidden;
             thread.style.display = isHidden ? 'none' : 'flex';
             // toggleButton.textContent = isHidden ? 'Show Sidebar' : 'Hide Sidebar';
@@ -68,11 +89,8 @@ GM_addStyle(`
         });
     }
 
-    let run = false;
+
     function add_thread_list_toggle(thread_list) {
-        if (run) {
-            return true;
-        }
         if (thread_list) {
             // thread_list.style.display = 'none';
 
@@ -86,11 +104,10 @@ GM_addStyle(`
 				inbox_button.addEventListener('click', () => {
 					console.log("Run add_thread_list_toggle again after each keypress on inbox_button");
 					setTimeout(() => {
-                        run = false;
                         add_thread_list_toggle(thread_list);
 					}, 100);
 				});
-                run = true;
+
             }
             else {
                 console.log("Target element for button placement NOT found.");
@@ -130,6 +147,26 @@ GM_addStyle(`
         }, 500);
     })();
 
+    let resizeTimeout;
+
+    function debouncedResizeHandler() {
+    clearTimeout(resizeTimeout); // Clear any previous timeout
+    resizeTimeout = setTimeout(function() {
+        // Your actual resize handling logic here (the original handleResize content)
+        console.log("Debounced resize handling...");
+        console.log("Width:", window.innerWidth);
+        console.log("Height:", window.innerHeight);
+
+        const thread_list = find_thread_list();
+        if (thread_list) {
+            add_thread_list_toggle(thread_list);
+        }
+
+    }, 250); // Wait 250 milliseconds after the last resize event
+    }
+
+    window.addEventListener('resize', debouncedResizeHandler);
+    
     console.log("Init %s finished", extension_name);
 
 })();
