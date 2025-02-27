@@ -5,6 +5,7 @@
 // @description  Automatically focuses the Messenger message input box on any keypress.
 // @author       Gemini (Bard, based on user prompt)
 // @match        https://www.messenger.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
 // @grant        none
 // ==/UserScript==
 
