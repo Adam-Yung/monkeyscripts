@@ -6,6 +6,7 @@
 // @author       Bee
 // @match        https://www.messenger.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
+// @run-at       document-body
 // @grant        none
 // ==/UserScript==
 
