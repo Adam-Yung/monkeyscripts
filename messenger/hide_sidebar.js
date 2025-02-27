@@ -7,6 +7,7 @@
 // @author       Bee
 // @match        https://www.messenger.com/*
 // @run-at       document-end
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
 // @grant        none
 // ==/UserScript==
 function GM_addStyle(aCss) {
@@ -30,8 +31,8 @@ GM_addStyle(`
     }
     @media (prefers-color-scheme: dark) {
         .toggle-button-class {
-            stroke: #ffffff;
-            fill: #ffffff;
+            stroke: #e4e6ea;
+            fill: #e4e6ea;
         }
     }
     @media (prefers-color-scheme: light) {
