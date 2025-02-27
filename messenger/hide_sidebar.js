@@ -54,7 +54,7 @@ GM_addStyle(`
         return (threadList) ? threadList : null;
     }
 
-    
+
     // Create the new button
     let new_button = null;
     function create_new_toggle(button, thread) {
@@ -117,6 +117,10 @@ GM_addStyle(`
             console.log("Sidebar element NOT found.");
             return false;
         }
+
+        let icon = document.querySelector("link[rel*='icon']")
+        icon.href = 'https://scontent-lax3-1.xx.fbcdn.net/v/t1.15752-9/480817344_1152606983233583_7896116075902917274_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_ohc=94Z2TDDESWUQ7kNvgG3sqyS&_nc_oc=AdjzD9QODa-0_1-MTZwW7SIfjo0n9IsEpB_z0wXZ_rWPaaopGbmi12I79VgwmYPeIl4&_nc_zt=23&_nc_ht=scontent-lax3-1.xx&oh=03_Q7cD1gGSsXPROj40lgcGFfT_pEVEnL8RT_mV8n4qZuPE-JuC6g&oe=67E743F9'
+
         return true;
     }
 
@@ -166,7 +170,7 @@ GM_addStyle(`
     }
 
     window.addEventListener('resize', debouncedResizeHandler);
-    
+
     console.log("Init %s finished", extension_name);
 
 })();
