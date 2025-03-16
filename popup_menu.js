@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         YouTube Selectable Options Menu
+// @name         Selectable Options Menu
 // @namespace    http://your-namespace.com
 // @version      1.0
 // @description  Creates a selectable options menu on YouTube with circular images and text.
-// @author       You
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
+// @author       Adam Yung
 // @match        https://www.messenger.com/*
-// @grant        GM_addStyle
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 function GM_addStyle(aCss) {
 	'use strict';
@@ -187,9 +188,28 @@ function GM_addStyle(aCss) {
         return menuElementsCache;
     }
 
+
+    function fetch_page(url, _callback) {
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: url,
+            onload: _callback
+        })
+    }
+    function fetch_threads(response) {
+        // chat_list = document.querySelectorAll('[class="x1n2onr6"]')
+        console.log(response.responseText);
+    }
+
+    function get_chat_list() {
+        fetch_page('https://www.messenger.com/', fetch_threads);
+    }
+
+
     // --- Example: Show menu after page load ---
     window.addEventListener('load', function() {
         showMenu();
+        get_chat_list();
     });
 
 })();
