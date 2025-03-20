@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Messenger Auto Focus on Keypress
-// @namespace    http://tampermonkey.net/
+// @name         Auto Focus Messagebox
+// @namespace    http://your-namespace.com
 // @version      1.0
-// @description  Automatically focuses the Messenger message input box on any keypress.
-// @author       Gemini (Bard, based on user prompt)
-// @match        https://www.messenger.com/*
+// @description  Creates a selectable options menu on YouTube with circular images and text.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
+// @author       Adam Yung
+// @match        https://www.messenger.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -45,6 +45,14 @@
     }
 
     document.addEventListener('keydown', function(event) {
+        if (event.metaKey || event.altKey || event.ctrlKey) {
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9\u4e00-\u9fff]$/.test(event.key)) {
+            return; // Ignore non-alphanumeric keypresses
+        }
+
         const messageBox = findMessageBox();
 
         // Check if the currently active element is an input, textarea, or select.
@@ -65,13 +73,13 @@
     // check for it.
     let messageBoxCheckInterval;
     function startMessageBoxCheck() {
-      messageBoxCheckInterval = setInterval(() => {
-        const messageBox = findMessageBox();
-        if (messageBox) {
-          clearInterval(messageBoxCheckInterval); // Stop checking once found
-          messageBox.focus(); // Focus it immediately
-        }
-      }, 500); // Check every 500 milliseconds (adjust as needed)
+        messageBoxCheckInterval = setInterval(() => {
+            const messageBox = findMessageBox();
+            if (messageBox) {
+                clearInterval(messageBoxCheckInterval); // Stop checking once found
+                messageBox.focus(); // Focus it immediately
+            }
+        }, 500); // Check every 500 milliseconds (adjust as needed)
     }
 
     // Start checking for the message box after the page loads.
