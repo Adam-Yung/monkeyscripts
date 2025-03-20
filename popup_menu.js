@@ -6,7 +6,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
 // @author       Adam Yung
 // @match        https://www.messenger.com/*
-// @grant        GM_xmlhttpRequest
+// @grant        none
 // ==/UserScript==
 function GM_addStyle(aCss) {
 	'use strict';
@@ -61,7 +61,8 @@ function GM_addStyle(aCss) {
             transition: background-color 0.3s ease;
         }
 
-        .menu-option:hover {
+        .menu-option:hover,
+        .menu-option:focus {
             background-color: #f0f0f0;
         }
 
@@ -107,9 +108,14 @@ function GM_addStyle(aCss) {
         }
     `);
 
+    let overlay = null;
+
     // --- HTML Structure for the Menu ---
     function createMenu() {
-        const overlay = document.createElement('div');
+        if (overlay) {
+            overlay.remove();
+        }
+        overlay = document.createElement('div');
         overlay.id = 'myMenuOverlay';
         overlay.style.display = 'none';
 
@@ -117,16 +123,22 @@ function GM_addStyle(aCss) {
         container.id = 'myMenuContainer';
 
         // Options data (you can extend this)
-        const optionsData = [
-            { text: "Yourself", imageUrl: "https://via.placeholder.com/40/007bff/FFFFFF?Text=You" },
-            { text: "Person 1", imageUrl: "https://via.placeholder.com/40/28a745/FFFFFF?Text=P1" },
-            { text: "Person 2", imageUrl: "https://via.placeholder.com/40/dc3545/FFFFFF?Text=P2" }
-        ];
+        const optionsData = get_chat_list();
+
+
 
         // Create menu options
         optionsData.forEach(option => {
+            /*
+            console.log("Creating entry for\nName: %s\nimg: %s\nlink: %s",
+                        option.text,
+                        option.imageUrl,
+                        option.link.href
+                       );
+            */
             const optionDiv = document.createElement('div');
             optionDiv.classList.add('menu-option');
+            optionDiv.tabIndex = 0;
 
             const imageContainer = document.createElement('div');
             imageContainer.classList.add('option-image-container');
@@ -147,13 +159,16 @@ function GM_addStyle(aCss) {
             container.appendChild(optionDiv);
 
             // Add event listener for option selection (example)
-            optionDiv.addEventListener('click', function() {
-                console.log(`Selected: ${option.text}`);
-                hideMenu(); // Optionally hide the menu after selection
-                // You can add more logic here based on the selected option
+            optionDiv.addEventListener('click', () => chat_selection(option));
+            // Add event listener for keyboard navigation (optional, for Enter key selection)
+            optionDiv.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    chat_selection(option);
+                }
             });
         });
 
+        /*
         // Dismiss button
         const dismissButton = document.createElement('button');
         dismissButton.id = 'myMenuDismissButton';
@@ -161,55 +176,95 @@ function GM_addStyle(aCss) {
         dismissButton.addEventListener('click', hideMenu);
 
         container.appendChild(dismissButton);
+        */
+
         overlay.appendChild(container);
         document.body.appendChild(overlay);
 
         return { overlay };
     }
 
+    function chat_selection(option) {
+        console.log(`Selected: ${option.text}`);
+        hideMenu();
+        if (window.location.href == option.link.href) {
+            console.log("Already on selected chat");
+        }
+        else {
+            option.link.click();
+        }
+    }
     // --- Function to Show the Menu ---
     function showMenu() {
         const menuElements = getMenuElements();
         menuElements.overlay.style.display = 'flex';
+        const firstOption = document.querySelector('#myMenuContainer .menu-option');
+        if (firstOption) {
+            firstOption.focus();
+        }
     }
 
     // --- Function to Hide the Menu ---
     function hideMenu() {
-        const menuElements = getMenuElements();
-        menuElements.overlay.style.display = 'none';
+        overlay.style.display = 'none';
+        overlay.remove();
+        overlay = null;
     }
 
-    // --- Get or Create Menu Elements (Singleton) ---
-    let menuElementsCache = null;
     function getMenuElements() {
-        if (!menuElementsCache) {
-            menuElementsCache = createMenu();
-        }
+        let menuElementsCache = createMenu();
+        
         return menuElementsCache;
     }
 
 
-    function fetch_page(url, _callback) {
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: url,
-            onload: _callback
-        })
-    }
-    function fetch_threads(response) {
-        // chat_list = document.querySelectorAll('[class="x1n2onr6"]')
-        console.log(response.responseText);
-    }
-
     function get_chat_list() {
-        fetch_page('https://www.messenger.com/', fetch_threads);
+        let options = [];
+        const chatListContainer = document.querySelectorAll('[class="x1n2onr6"]');
+
+        if (chatListContainer.length === 0) {
+            console.error("Error: Chat list container element not found.");
+            return;
+        }
+
+        const chatList = chatListContainer[0].children;
+
+        if (!chatList || chatList.length === 0) {
+            console.log("There are no chats loaded.");
+            return;
+        }
+
+        console.log("There are %d chats loaded", chatList.length);
+
+        let max_options = Math.min(chatList.length, 6);
+        let person = null;
+
+        for (let i = 0; i < max_options; ++i) {
+
+            person = chatList[i];
+
+            if (!person) {
+                return;
+            }
+
+            const nameElement = person.querySelector('span');
+            const imgElement = person.querySelector('img');
+            const linkElement = person.querySelector('a[href]');
+
+            const name = nameElement ? nameElement.textContent : "N/A";
+            const img = imgElement ? imgElement.src : "N/A";
+
+
+            options.push({text: name, imageUrl: img, link: linkElement});
+        }
+
+        return options
     }
 
-
-    // --- Example: Show menu after page load ---
-    window.addEventListener('load', function() {
-        showMenu();
-        get_chat_list();
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === '`') {
+            showMenu();
+        }
     });
 
 })();
