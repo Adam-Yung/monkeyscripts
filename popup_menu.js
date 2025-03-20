@@ -9,17 +9,22 @@
 // @grant        none
 // ==/UserScript==
 function GM_addStyle(aCss) {
-	'use strict';
-	let head = document.getElementsByTagName('head')[0];
-	if (head) {
-		let style = document.createElement('style');
-		style.setAttribute('type', 'text/css');
-		style.textContent = aCss;
-		head.appendChild(style);
-		return style;
-	}
-	return null;
+    'use strict';
+    let head = document.getElementsByTagName('head')[0];
+    if (head) {
+        let style = document.createElement('style');
+        style.setAttribute('type', 'text/css');
+        style.textContent = aCss;
+        head.appendChild(style);
+        return style;
+    }
+    return null;
 };
+
+
+function isDarkModeEnabled() {
+    return document.documentElement.classList.contains('__fb-dark-mode');
+}
 
 (function() {
     'use strict';
@@ -106,6 +111,41 @@ function GM_addStyle(aCss) {
         #myMenuDismissButton:hover {
             background-color: #d32f2f;
         }
+
+        /* Dark Mode Styles */
+        .dark-mode #myMenuOverlay {
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+        }
+
+        .dark-mode #myMenuContainer {
+            background-color: #333; /* Dark background */
+            border: 1px solid #555; /* Darker border */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6); /* Darker shadow */
+            color: #eee; /* Light text */
+        }
+
+        .dark-mode .menu-option {
+            color: #ddd; /* Slightly lighter text for options */
+        }
+
+        .dark-mode .menu-option:hover,
+        .dark-mode .menu-option:focus {
+            background-color: #555; /* Darker hover/focus */
+            color: #fff; /* White text on hover/focus */
+        }
+
+        .dark-mode .option-image-container {
+            background-color: #555; /* Darker placeholder background */
+        }
+
+        .dark-mode #myMenuDismissButton {
+            background-color: #c62828; /* Darker red */
+            color: #fff;
+        }
+
+        .dark-mode #myMenuDismissButton:hover {
+            background-color: #a71d1d; /* Even darker red */
+        }
     `);
 
     let overlay = null;
@@ -177,7 +217,12 @@ function GM_addStyle(aCss) {
 
         container.appendChild(dismissButton);
         */
-
+        if (isDarkModeEnabled()) {
+            document.body.classList.add('dark-mode');
+        }
+        else {
+            document.body.classList.remove('dark-mode');
+        }
         overlay.appendChild(container);
         document.body.appendChild(overlay);
 
@@ -208,12 +253,14 @@ function GM_addStyle(aCss) {
     function hideMenu() {
         overlay.style.display = 'none';
         overlay.remove();
+        document.body.classList.remove('dark-mode');
+
         overlay = null;
     }
 
     function getMenuElements() {
         let menuElementsCache = createMenu();
-        
+
         return menuElementsCache;
     }
 
