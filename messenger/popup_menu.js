@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Selectable Options Menu
-// @namespace    http://your-namespace.com
+// @namespace    mkworld.com
 // @version      1.0
-// @description  Creates a selectable options menu on YouTube with circular images and text.
+// @description  Creates a selectable options menu on Messenger for quick chat switchting
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
 // @author       Adam Yung
 // @match        https://www.messenger.com/*
@@ -142,31 +142,79 @@ const css_styles = `
     }
 `;
 
-(function() {
-    'use strict';
+class overlay {
+    constructor() {
+        this.overlay = null;
+        this.overlay_buttons = [];
+        this.display = false;
+        this.dark_mode = false;
+        this.chatListContainer = null;
+    }
 
-    let menu_open = false;
+    isDarkModeEnabled() {
+        return document.documentElement.classList.contains('__fb-dark-mode');
+    }
 
-    // --- CSS for the Menu ---
-    GM_addStyle(css_styles);
-
-    let overlay = null;
-    let overlay_buttons = [];
-
-    // --- HTML Structure for the Menu ---
-    function createMenu() {
-        if (overlay) {
-            overlay.remove();
+    get_chat_list() {
+        let options = [];
+        if (this.chatListContainer === null) {
+            this.chatListContainer = document.querySelectorAll('[class="x1n2onr6"]');
         }
-        overlay = document.createElement('div');
-        overlay.id = 'myMenuOverlay';
-        overlay.style.display = 'none';
+
+        if (this.chatListContainer.length === 0) {
+            console.error("Error: Chat list container element not found.");
+            return;
+        }
+
+        const chatList = this.chatListContainer[0].children;
+
+        if (!chatList || chatList.length === 0) {
+            console.log("There are no chats loaded.");
+            return;
+        }
+
+        console.log("There are %d chats loaded", chatList.length);
+
+        let max_options = Math.min(chatList.length, 6);
+        let person = null;
+
+        for (let i = 0; i < max_options; ++i) {
+
+            person = chatList[i];
+
+            if (!person) {
+                return;
+            }
+
+            const nameElement = person.querySelector('span');
+            const imgElement = person.querySelector('img');
+            const linkElement = person.querySelector('a[href]');
+            const unreadElement = person.querySelector('span[data-visualcompletion]');
+
+            const name = nameElement ? nameElement.textContent : "N/A";
+            const img = imgElement ? imgElement.src : "N/A";
+            const unread = !!unreadElement; // Check if the unread element exists
+
+
+            options.push({text: name, imageUrl: img, link: linkElement, unread: unread});
+        }
+
+        return options
+    }
+    // --- HTML Structure for the Menu ---
+    createMenu() {
+        if (this.overlay) {
+            this.overlay.remove();
+        }
+        this.overlay = document.createElement('div');
+        this.overlay.id = 'myMenuOverlay';
+        this.overlay.style.display = 'none';
 
         const container = document.createElement('div');
         container.id = 'myMenuContainer';
 
         // Options data (you can extend this)
-        const optionsData = get_chat_list();
+        const optionsData = this.get_chat_list();
 
 
 
@@ -186,7 +234,7 @@ const css_styles = `
                 optionDiv.classList.add('unread-chat');
             }
 
-            overlay_buttons.push(optionDiv);
+            this.overlay_buttons.push(optionDiv);
 
             const imageContainer = document.createElement('div');
             imageContainer.classList.add('option-image-container');
@@ -218,8 +266,11 @@ const css_styles = `
             optionDiv.addEventListener('click', () => chat_selection(option));
             // Add event listener for keyboard navigation (optional, for Enter key selection)
             optionDiv.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    chat_selection(option);
+                switch (event.key) {
+                    case 'Enter':
+                    case ' ':
+                        chat_selection(option);
+                        break;
                 }
             });
         });
@@ -233,17 +284,29 @@ const css_styles = `
 
         container.appendChild(dismissButton);
         */
-        if (isDarkModeEnabled()) {
+        if (this.isDarkModeEnabled()) {
             document.body.classList.add('dark-mode');
         }
         else {
             document.body.classList.remove('dark-mode');
         }
-        overlay.appendChild(container);
-        document.body.appendChild(overlay);
-
-        return { overlay };
+        this.overlay.appendChild(container);
+        document.body.appendChild(this.overlay);
     }
+
+}
+
+(function() {
+    'use strict';
+
+    let menu_open = false;
+
+    // --- CSS for the Menu ---
+    GM_addStyle(css_styles);
+
+    let overlay = null;
+    let overlay_buttons = [];
+
 
     function chat_selection(option) {
         console.log(`Selected: ${option.text}`);
@@ -283,50 +346,7 @@ const css_styles = `
     }
 
 
-    function get_chat_list() {
-        let options = [];
-        const chatListContainer = document.querySelectorAll('[class="x1n2onr6"]');
 
-        if (chatListContainer.length === 0) {
-            console.error("Error: Chat list container element not found.");
-            return;
-        }
-
-        const chatList = chatListContainer[0].children;
-
-        if (!chatList || chatList.length === 0) {
-            console.log("There are no chats loaded.");
-            return;
-        }
-
-        console.log("There are %d chats loaded", chatList.length);
-
-        let max_options = Math.min(chatList.length, 6);
-        let person = null;
-
-        for (let i = 0; i < max_options; ++i) {
-
-            person = chatList[i];
-
-            if (!person) {
-                return;
-            }
-
-            const nameElement = person.querySelector('span');
-            const imgElement = person.querySelector('img');
-            const linkElement = person.querySelector('a[href]');
-            const unreadElement = person.querySelector('span[data-visualcompletion]');
-
-            const name = nameElement ? nameElement.textContent : "N/A";
-            const img = imgElement ? imgElement.src : "N/A";
-            const unread = !!unreadElement; // Check if the unread element exists
-
-
-            options.push({text: name, imageUrl: img, link: linkElement, unread: unread});
-        }
-
-        return options
-    }
 
     document.addEventListener('keydown', function(event) {
         if (event.ctrlKey && event.key === '`') {
@@ -360,6 +380,3 @@ function GM_addStyle(aCss) {
 };
 
 
-function isDarkModeEnabled() {
-    return document.documentElement.classList.contains('__fb-dark-mode');
-}
