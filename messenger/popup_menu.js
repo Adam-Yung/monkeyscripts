@@ -148,8 +148,7 @@ class overlay {
         this.overlay_buttons = [];
         this.display = false;
         this.dark_mode = false;
-        this.chatListContainer = null;
-    }
+        this.chatListContainer = null;}
 
     isDarkModeEnabled() {
         return document.documentElement.classList.contains('__fb-dark-mode');
@@ -157,9 +156,8 @@ class overlay {
 
     get_chat_list() {
         let options = [];
-        if (this.chatListContainer === null) {
-            this.chatListContainer = document.querySelectorAll('[class="x1n2onr6"]');
-        }
+        
+        this.chatListContainer = document.querySelectorAll('[class="x1n2onr6"]');
 
         if (this.chatListContainer.length === 0) {
             console.error("Error: Chat list container element not found.");
