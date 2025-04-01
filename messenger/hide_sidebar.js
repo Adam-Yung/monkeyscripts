@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Messenger Hide Sidebar
-// @namespace    http://tampermonkey.net/
+// @namespace    https://mooibee.us
 // @version      1.3
 // @description  Hide Sidebar from page view and adapt to theme
 // @author       Bee
@@ -24,10 +24,22 @@ function GM_addStyle(aCss) {
 
 GM_addStyle(`
     .toggle-button-class {
-        margin-right: 5px;
-        margin-bottom: 7.5px;
+        cursor: pointer;
+    }
+    .toggle-button-class.right {
+        margin: 8px 0 0 10px
+    }
+    .toggle-button-class.left {
+        margin: 0 10px 8px 0
     }
 `);
+
+const right_button_old = `<svg class="toggle-button-class" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)" stroke-width="1.2"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.70710678,12 L8.85355339,15.1464466 C9.04881554,15.3417088 9.04881554,15.6582912 8.85355339,15.8535534 C8.65829124,16.0488155 8.34170876,16.0488155 8.14644661,15.8535534 L4.14644661,11.8535534 C3.95118446,11.6582912 3.95118446,11.3417088 4.14644661,11.1464466 L8.14644661,7.14644661 C8.34170876,6.95118446 8.65829124,6.95118446 8.85355339,7.14644661 C9.04881554,7.34170876 9.04881554,7.65829124 8.85355339,7.85355339 L5.70710678,11 L16.5,11 C16.7761424,11 17,11.2238576 17,11.5 C17,11.7761424 16.7761424,12 16.5,12 L5.70710678,12 Z M19,3.5 C19,3.22385763 19.2238576,3 19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 C19.2238576,20 19,19.7761424 19,19.5 L19,3.5 Z"></path> </g></svg>`;
+
+const left_button = `<svg class="toggle-button-class left" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>arrow-right-from-line</title> <path d="M31.218 15.838c-0.007-0.058-0.018-0.109-0.031-0.159l0.002 0.008c-0.051-0.223-0.158-0.416-0.305-0.571l0 0.001-5-5c-0.226-0.227-0.539-0.367-0.885-0.367-0.691 0-1.251 0.56-1.251 1.251 0 0.345 0.14 0.658 0.366 0.884v0l2.867 2.866h-18.982c-0.69 0-1.25 0.56-1.25 1.25s0.56 1.25 1.25 1.25v0h18.981l-2.866 2.865c-0.226 0.226-0.366 0.539-0.366 0.884 0 0.691 0.56 1.251 1.251 1.251 0.345 0 0.658-0.14 0.884-0.366l5-5.001c0.012-0.012 0.016-0.029 0.027-0.041 0.099-0.103 0.18-0.223 0.239-0.356l0.003-0.008 0-0.003c0.051-0.13 0.080-0.28 0.080-0.437 0-0.071-0.006-0.141-0.017-0.208l0.001 0.007zM2 0.75c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25s1.25-0.56 1.25-1.25v0-28c0-0.69-0.56-1.25-1.25-1.25v0z"></path> </g></svg>`;
+
+const right_button = `<svg class="toggle-button-class right" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>arrow-right-from-line</title> <path d="M31.218 15.838c-0.007-0.058-0.018-0.109-0.031-0.159l0.002 0.008c-0.051-0.223-0.158-0.416-0.305-0.571l0 0.001-5-5c-0.226-0.227-0.539-0.367-0.885-0.367-0.691 0-1.251 0.56-1.251 1.251 0 0.345 0.14 0.658 0.366 0.884v0l2.867 2.866h-18.982c-0.69 0-1.25 0.56-1.25 1.25s0.56 1.25 1.25 1.25v0h18.981l-2.866 2.865c-0.226 0.226-0.366 0.539-0.366 0.884 0 0.691 0.56 1.251 1.251 1.251 0.345 0 0.658-0.14 0.884-0.366l5-5.001c0.012-0.012 0.016-0.029 0.027-0.041 0.099-0.103 0.18-0.223 0.239-0.356l0.003-0.008 0-0.003c0.051-0.13 0.080-0.28 0.080-0.437 0-0.071-0.006-0.141-0.017-0.208l0.001 0.007zM2 0.75c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25s1.25-0.56 1.25-1.25v0-28c0-0.69-0.56-1.25-1.25-1.25v0z"></path> </g></svg>`;
+
 
 (function() {
     'use strict';
@@ -53,7 +65,7 @@ GM_addStyle(`
         const svg = new_button.querySelector('svg');
         const paths = svg.querySelectorAll('path');
         paths.forEach(path => path.remove());
-        new_button.innerHTML = '<svg class="toggle-button-class" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)" stroke-width="1.2"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.70710678,12 L8.85355339,15.1464466 C9.04881554,15.3417088 9.04881554,15.6582912 8.85355339,15.8535534 C8.65829124,16.0488155 8.34170876,16.0488155 8.14644661,15.8535534 L4.14644661,11.8535534 C3.95118446,11.6582912 3.95118446,11.3417088 4.14644661,11.1464466 L8.14644661,7.14644661 C8.34170876,6.95118446 8.65829124,6.95118446 8.85355339,7.14644661 C9.04881554,7.34170876 9.04881554,7.65829124 8.85355339,7.85355339 L5.70710678,11 L16.5,11 C16.7761424,11 17,11.2238576 17,11.5 C17,11.7761424 16.7761424,12 16.5,12 L5.70710678,12 Z M19,3.5 C19,3.22385763 19.2238576,3 19.5,3 C19.7761424,3 20,3.22385763 20,3.5 L20,19.5 C20,19.7761424 19.7761424,20 19.5,20 C19.2238576,20 19,19.7761424 19,19.5 L19,3.5 Z"></path> </g></svg>';
+        new_button.innerHTML = left_button;
 
         button.parentNode.insertBefore(new_button, button.nextSibling);
 
@@ -62,6 +74,14 @@ GM_addStyle(`
         new_button.addEventListener('click', () => {
             isHidden = !isHidden;
             thread.style.display = isHidden ? 'none' : 'flex';
+            if (isHidden) {
+                new_button.innerHTML = right_button;
+            }
+            else {
+                new_button.innerHTML = left_button;
+            }
+            // setTimeout(updateToggleButtonColor, 100); // Update color on resize as well
+            updateToggleButtonColor();
         });
     }
 
