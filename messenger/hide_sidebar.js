@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Messenger Hide Sidebar
-// @namespace	https://dev.mooibee.us
+// @namespace	 https://dev.mooibee.us
 // @version      1.3
 // @description  Hide Sidebar from page view and adapt to theme
 // @author       Bee
@@ -9,6 +9,8 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com
 // @grant        none
 // ==/UserScript==
+
+
 function GM_addStyle(aCss) {
     'use strict';
     let head = document.getElementsByTagName('head')[0];
@@ -27,10 +29,25 @@ GM_addStyle(`
         cursor: pointer;
     }
     .toggle-button-class.right {
-        margin: 8px 0 0 10px
+        margin: 8px 0 0 10px;
     }
     .toggle-button-class.left {
-        margin: 0 10px 8px 0
+        margin: 0 10px 8px 0;
+    }
+    
+    .menu_collapse {
+        max-width: 480px;
+        min-width: 300px;
+        overflow: hidden;
+        /* Added min-width to the transition */
+        transition: max-width 0.5s ease-in-out, min-width 0.5s ease-in-out;
+        display: flex !important;
+        flex-direction: column;
+    }
+
+    .menu_collapse.hidden {
+        max-width: 0;
+        min-width: 0;
     }
 `);
 
@@ -56,8 +73,21 @@ const right_button = `<svg class="toggle-button-class right" viewBox="0 0 45 45"
         let old_button = document.querySelector('[aria-label="Thread List Button"]');
         if (old_button) {
             console.log("Button already exists, not adding again");
+            if (thread && !thread.classList.contains('menu_collapse')) {
+                thread.classList.add('menu_collapse');
+             }
             return;
         }
+
+        // Add the base class for transition to the thread list element
+        // This needs to happen before we determine the initial state or add listeners.
+        if (thread) {
+             thread.classList.add('menu_collapse');
+        } else {
+            console.log("Thread element not found when creating toggle.");
+            return;
+        }
+
         new_button = button.cloneNode(true);
         new_button.setAttribute('aria-label', 'Thread List Button');
         new_button.style.marginTop = '10px';
@@ -69,18 +99,32 @@ const right_button = `<svg class="toggle-button-class right" viewBox="0 0 45 45"
 
         button.parentNode.insertBefore(new_button, button.nextSibling);
 
-        const original_display = window.getComputedStyle(thread).getPropertyValue('display');
-        let isHidden = (original_display === "none");
+        let isHidden = thread.classList.contains('hidden') || window.getComputedStyle(thread).getPropertyValue('display') === "none";
+        
+        if (isHidden) {
+             thread.classList.add('hidden');
+             new_button.innerHTML = right_button; // Show expand button
+        } else {
+             thread.classList.remove('hidden');
+             new_button.innerHTML = left_button; // Show collapse button
+        }
+
         new_button.addEventListener('click', () => {
-            isHidden = !isHidden;
-            thread.style.display = isHidden ? 'none' : 'flex';
-            if (isHidden) {
-                new_button.innerHTML = right_button;
+            // Check the current hidden state based on our class
+            const currentlyHidden = thread.classList.contains('hidden');
+
+            // Toggle the 'hidden' class. This triggers the CSS transition.
+            thread.classList.toggle('hidden', !currentlyHidden);
+
+            // Update our button SVG based on the new state
+            if (!currentlyHidden) { // If it was visible and is now hidden
+                new_button.innerHTML = right_button; // Show expand button
             }
-            else {
-                new_button.innerHTML = left_button;
+            else { // If it was hidden and is now visible
+                new_button.innerHTML = left_button; // Show collapse button
             }
-            // setTimeout(updateToggleButtonColor, 100); // Update color on resize as well
+
+            // Update button color based on current theme
             updateToggleButtonColor();
         });
     }
