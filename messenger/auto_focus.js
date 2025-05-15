@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Auto Focus Messagebox
-// @namespace    http://your-namespace.com
+// @namespace	https://dev.mooibee.us
 // @version      1.0
 // @description  Creates a selectable options menu on YouTube with circular images and text.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Selectable Options Menu
-// @namespace    https://mooibee.us
+// @namespace	https://dev.mooibee.us
 // @version      1.0
 // @description  Creates a selectable options menu on Messenger for quick chat switchting
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=messenger.com

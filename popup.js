@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube Popup Dialog
-// @namespace    http://your-namespace.com
+// @namespace	https://dev.mooibee.us
 // @version      1.0
 // @description  Creates a popup dialog on YouTube with a dismiss button
 // @author       You

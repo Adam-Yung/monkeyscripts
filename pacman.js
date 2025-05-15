@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         New Userscript
-// @namespace    http://tampermonkey.net/
+// @namespace	https://dev.mooibee.us
 // @version      2025-02-20
 // @description  try to take over the world!
 // @author       You

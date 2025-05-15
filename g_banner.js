@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Mail hide stupid banner (Robust)
-// @namespace    http://tampermonkey.net/
+// @namespace	https://dev.mooibee.us
 // @version      2025-04-07.1
 // @description  Mail hide stupid banner using MutationObserver and a stable selector
 // @author       You

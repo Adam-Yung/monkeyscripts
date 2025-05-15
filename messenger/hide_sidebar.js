@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Messenger Hide Sidebar
-// @namespace    https://mooibee.us
+// @namespace	https://dev.mooibee.us
 // @version      1.3
 // @description  Hide Sidebar from page view and adapt to theme
 // @author       Bee

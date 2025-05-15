@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Change icon
-// @namespace    https://mooibee.us
+// @namespace	https://dev.mooibee.us
 // @version      2025-02-27
 // @description  try to take over the world!
 // @author       Bee
