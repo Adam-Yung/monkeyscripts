@@ -1,4 +1,27 @@
+// ==UserScript==
+// @name         Blocker 1
+// @namespace    http://tampermonkey.net/
+// @version      2025-06-20
+// @description  try to take over the world!
+// @author       You
+// @match        https://www.youtube.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
+// @grant        none
+// ==/UserScript==
+
+
 (() => {
+
+    // Fix for "TrustedHTML" error
+if (window.trustedTypes && window.trustedTypes.createPolicy) {
+    window.trustedTypes.createPolicy('default', {
+        createHTML: (string, sink) => string,
+        createScriptURL: (string, sink) => string,
+        createScript: (string, sink) => string,
+    });
+}
+
+
     if (location.pathname.startsWith("/shorts/"))
         return;
     let e,
