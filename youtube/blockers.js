@@ -1,337 +1,736 @@
 (() => {
-	if (location.pathname.startsWith("/shorts/")) return;
-	let e, t, a, r, n, s, i;
-
-	function o(e) {
-    	let a = document.querySelector("video:not([vinegared])");
-    	!a || a.paused || a.readyState < 4 ? setTimeout((() => {
-        	o(e)
-    	}), 100) : i || (i = e, "2160p" !== t && "best" !== t || !i.hd2160 ? "1440p" !== t && "best" !== t || !i.hd1440 ? "1080p" !== t && "best" !== t || !i.hd1080 ? "720p" !== t && "best" !== t || !i.hd720 ? "480p" !== t && "best" !== t || !i.large ? "360p" !== t && "best" !== t || !i.medium ? "240p" !== t && "best" !== t || !i.small ? "144p" !== t && "best" !== t || !i.tiny ? "audio" === t && i.audio ? d(a, i.audio.url) : d(a, i.auto.url) : d(a, i.tiny.url) : d(a, i.small.url) : d(a, i.medium.url) : d(a, i.large.url) : d(a, i.hd720.url) : d(a, i.hd1080.url) : d(a, i.hd1440.url) : d(a, i.hd2160.url))
-	}
-
-	function d(a, s) {
-    	let o = a.cloneNode(!0);
-    	a.replaceWith(o), l(o), o.src = s, o.load(), o.play(),
-        	function(e) {
-            	let t = c();
-            	t > 0 && (e.currentTime = t)
-        	}(o), o.setAttribute("vinegared", !0), E("\n  	(() => {\n    	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n    	let video = document.querySelector('video[vinegared]');\n    	if (player && video) {\n      	player.addEventListener('resize', (e) => {\n        	video.style.width = e.width + 'px';\n        	video.style.height = e.height + 'px';\n      	});\n    	}\n  	})();\n  	"),
-        	function(t) {
-            	t.addEventListener("ended", (t => {
-                	e && k()
-            	}))
-        	}(o),
-        	function() {
-            	let e = document.querySelector("#primary");
-            	if (!e) return;
-            	r || e.setAttribute("notoolbar", !0)
-        	}(),
-        	function(e) {
-            	let a = document.createElement("div");
-            	a.id = "vinegar-toolbar";
-            	let r = document.createElement("div");
-            	r.classList.add("left"), a.appendChild(r);
-            	let n = document.createElement("div");
-            	n.classList.add("right"), a.appendChild(n);
-            	let s, o = p(r, "Quality", (t => {
-                	t.stopPropagation(), t.preventDefault(), r.classList.add("hidden"), n.classList.add("hidden"),
-                    	function(e, t) {
-                        	i.auto && y(e, t, i.auto.url, "Auto", "auto");
-                        	i.tiny && y(e, t, i.tiny.url, "144p", "144p");
-                        	i.small && y(e, t, i.small.url, "240p", "240p");
-                        	i.medium && y(e, t, i.medium.url, "360p", "360p");
-                        	i.large && y(e, t, i.large.url, "480p", "480p");
-                        	i.hd720 && y(e, t, i.hd720.url, "720p", "720p");
-                        	i.hd1080 && y(e, t, i.hd1080.url, "1080p", "1080p");
-                        	i.hd1440 && y(e, t, i.hd1440.url, "1440p", "1440p");
-                        	i.hd2160 && y(e, t, i.hd2160.url, "2160p", "2160p");
-                        	i.audio && y(e, t, i.audio.url, "Audio", "audio")
-                    	}(e, a)
-            	}));
-            	o.textContent = `${t.charAt(0).toUpperCase()}${t.slice(1)}`, p(n, "Loop", (t => {
-                	t.stopPropagation(), t.preventDefault();
-                	let a = t.target;
-                	e.loop ? (e.loop = !1, a.classList.remove("active")) : (e.loop = !0, a.classList.add("active"))
-            	})), p(n, "Replay", (t => {
-                	t.stopPropagation(), t.preventDefault(), e.currentTime = 0
-            	})), p(n, "Theater", (e => {
-                	e.stopPropagation(), e.preventDefault(), b()
-            	})), e.addEventListener("mousemove", (e => {
-                	clearTimeout(s), n.classList.add("showing"), n.classList.remove("removing"), s = setTimeout((() => {
-                    	n.classList.add("removing")
-                	}), 3e3)
-            	})), e.addEventListener("mouseleave", (e => {
-                	clearTimeout(s), s = setTimeout((() => {
-                    	n.classList.remove("showing", "removing")
-                	}), 100)
-            	})), n.addEventListener("mouseenter", (e => {
-                	clearTimeout(s), n.classList.add("showing"), n.classList.remove("removing")
-            	})), n.addEventListener("mouseleave", (e => {
-                	clearTimeout(s), s = setTimeout((() => {
-                    	n.classList.remove("showing", "removing")
-                	}), 100)
-            	}));
-            	let d = e.closest("div");
-            	d.insertBefore(a, e)
-        	}(o),
-        	function(e) {
-            	let t;
-            	i.captions.forEach((t => {
-                	let a = document.createElement("track");
-                	a.label = t.name.runs[0].text, a.kind = "subtitles", a.srclang = t.languageCode, a.src = `${t.baseUrl}&fmt=vtt`, e.appendChild(a)
-            	}));
-            	let a = "system" === n ? navigator.language : n,
-                	r = i.captions.filter((e => "en" === e.languageCode));
-            	t = r.length > 0 ? r[0] : i.captions[0];
-            	let s = document.createElement("track");
-            	s.label = `Auto-translated (${u(a)})`, s.kind = "subtitles", s.srclang = a, u(t.languageCode) === u(a) ? s.src = `${t.baseUrl}&fmt=vtt` : s.src = `${t.baseUrl}&fmt=vtt&tlang=${a}`;
-            	e.appendChild(s)
-        	}(o), E("\n  	(() => {\n    	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n    	if (player) {\n      	player.mute();\n      	player.pauseVideo();\n    	}\n  	})();\n  	"),
-        	function(e) {
-            	let t = 0;
-            	e.addEventListener("timeupdate", (a => {
-                	Math.abs(e.currentTime - t) < 10 || (t = e.currentTime, E(`\n    	(() => {\n      	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n      	if (player) {\n        	player.seekTo(${t});\n        	player.pauseVideo();\n      	}\n    	})();\n    	`))
-            	}))
-        	}(o),
-        	function(e) {
-            	navigator.mediaSession.setActionHandler("play", (async () => {
-                	await e.play()
-            	})), navigator.mediaSession.setActionHandler("pause", (() => {
-                	e.pause()
-            	})), navigator.mediaSession.setActionHandler("seekbackward", (() => {
-                	g(e, 10)
-            	})), navigator.mediaSession.setActionHandler("seekforward", (() => {
-                	f(e, 10)
-            	})), navigator.mediaSession.setActionHandler("previoustrack", (() => {
-                	E("\n  	(() => {\n    	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n    	if (player) {\n      	player.previousVideo();\n    	}\n  	})();\n  	")
-            	})), navigator.mediaSession.setActionHandler("nexttrack", (() => {
-                	k()
-            	}))
-        	}(o)
-	}
-
-	function l(e) {
-    	e.addEventListener("error", (r => {
-        	a || e.src === i.auto.url ? function(e) {
-            	e.remove(),
-                	function() {
-                    	let e = document.querySelector("#vinegar-toolbar .left .quality"),
-                        	a = e.cloneNode(!0);
-                    	e.replaceWith(a), a.textContent = `${t.charAt(0).toUpperCase()}${t.slice(1)} (Fallback)`, a.addEventListener("click", (e => {
-                        	e.stopPropagation(), e.preventDefault(), alert("Vinegar had a problem with this video. It could be because of a codec that can’t be played or a video with DRM. To keep the video playing, Vinegar has switched to YouTube’s video stream. Please note that the viewing experience might be degraded.")
-                    	}))
-                	}(), E(`\n  	(() => {\n    	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n    	if (player) {\n      	player.loadVideoById('${h()}', ${c()}, '${function(){switch(t){case"144p":return"tiny";case"240p":return"small";case"360p":return"medium";case"480p":return"large";case"720p":return"hd720";case"1080p":return"hd1080";case"1440p":return"hd1440";case"2160p":return"hd2160";default:return"auto"}}()}');\n      	player.unMute();\n\n      	function showControls() {\n        	let video = document.querySelector('video');\n        	if (video) {\n          	video.setAttribute('vinegar-fallback', true);\n          	video.setAttribute('vinegared', true);\n        	} else {\n          	setTimeout(() => {\n            	showControls();\n          	}, 1000);\n        	}\n      	}\n\n      	showControls();\n    	}\n  	})();\n  	`)
-        	}(e) : (v(e, i.auto.url), l(e))
-    	}), {
-        	once: !0
-    	})
-	}
-
-	function c() {
-    	let e = location.search.match(/t=(.+?)(&|$)/);
-    	if (e) {
-        	let a = e[1],
-            	r = a.match(/^(\d+h)?(\d+m)?(\d+s)?$/),
-            	n = a.match(/^\d+$/);
-        	if (r) {
-            	var t = 0;
-            	return r[1] && (t += 60 * parseInt(r[1]) * 60), r[2] && (t += 60 * parseInt(r[2])), r[3] && (t += parseInt(r[3])), t
-        	}
-        	return n ? parseInt(n[0]) : 0
-    	}
-    	return 0
-	}
-
-	function u(e) {
-    	return e.startsWith("af") ? "Afrikaans" : e.startsWith("sq") ? "Albanian" : e.startsWith("am") ? "Amharic" : e.startsWith("ar") ? "Arabic" : e.startsWith("hy") ? "Armenian" : e.startsWith("az") ? "Azerbaijani" : e.startsWith("bn") ? "Bangla" : e.startsWith("eu") ? "Basque" : e.startsWith("be") ? "Belarusian" : e.startsWith("bs") ? "Bosnian" : e.startsWith("bg") ? "Bulgarian" : e.startsWith("my") ? "Burmese" : e.startsWith("ca") ? "Catalan" : e.startsWith("ceb") ? "Cebuano" : e.startsWith("zh") ? "Chinese" : e.startsWith("co") ? "Corsican" : e.startsWith("hr") ? "Croatian" : e.startsWith("cs") ? "Czech" : e.startsWith("da") ? "Danish" : e.startsWith("nl") ? "Dutch" : e.startsWith("en") ? "English" : e.startsWith("eo") ? "Esperanto" : e.startsWith("et") ? "Estonian" : e.startsWith("tl") || e.startsWith("fil") ? "Filipino" : e.startsWith("fi") ? "Finnish" : e.startsWith("fr") ? "French" : e.startsWith("gl") ? "Galician" : e.startsWith("ka") ? "Georgian" : e.startsWith("de") ? "German" : e.startsWith("el") ? "Greek" : e.startsWith("gu") ? "Gujarati" : e.startsWith("ht") ? "Haitian Creole" : e.startsWith("haw") ? "Hawaiian" : e.startsWith("ha") ? "Hausa" : e.startsWith("iw") || e.startsWith("he") ? "Hebrew" : e.startsWith("hi") ? "Hindi" : e.startsWith("hmn") ? "Hmong" : e.startsWith("hu") ? "Hungarian" : e.startsWith("is") ? "Icelandic" : e.startsWith("ig") ? "Igbo" : e.startsWith("id") ? "Indonesian" : e.startsWith("ga") ? "Irish" : e.startsWith("it") ? "Italian" : e.startsWith("jp") ? "Japanese" : e.startsWith("jv") ? "Javanese" : e.startsWith("kn") ? "Kannada" : e.startsWith("kk") ? "Kazakh" : e.startsWith("km") ? "Khmer" : e.startsWith("rw") ? "Kinyarwanda" : e.startsWith("ko") ? "Korean" : e.startsWith("ku") ? "Kurdish" : e.startsWith("ky") ? "Kyrgyz" : e.startsWith("lo") ? "Lao" : e.startsWith("la") ? "Latin" : e.startsWith("lv") ? "Latvian" : e.startsWith("lt") ? "Lithuanian" : e.startsWith("lb") ? "Luxembourgish" : e.startsWith("mk") ? "Macedonian" : e.startsWith("mg") ? "Malagasy" : e.startsWith("ms") ? "Malay" : e.startsWith("ml") ? "Malayalam" : e.startsWith("mt") ? "Maltese" : e.startsWith("mi") ? "Maori" : e.startsWith("mr") ? "Marathi" : e.startsWith("mn") ? "Mongolian" : e.startsWith("ne") ? "Nepali" : e.startsWith("nb") || e.startsWith("nn") || e.startsWith("no") ? "Norwegian" : e.startsWith("ny") ? "Nyanja" : e.startsWith("or") ? "Odia" : e.startsWith("ps") ? "Pashto" : e.startsWith("fa") ? "Persian" : e.startsWith("pl") ? "Polish" : e.startsWith("pt") ? "Portuguese" : e.startsWith("pa") ? "Punjabi" : e.startsWith("ro") ? "Romanian" : e.startsWith("ru") ? "Russian" : e.startsWith("sm") ? "Samoan" : e.startsWith("gd") ? "Scottish Gaelic" : e.startsWith("sr") ? "Serbian" : e.startsWith("sn") ? "Shona" : e.startsWith("sd") ? "Sindhi" : e.startsWith("si") ? "Sinhala" : e.startsWith("sk") ? "Slovak" : e.startsWith("sl") ? "Slovenian" : e.startsWith("so") ? "Somali" : e.startsWith("st") ? "Southern Sotho" : e.startsWith("es") ? "Spanish" : e.startsWith("su") ? "Sudanese" : e.startsWith("sw") ? "Swahili" : e.startsWith("sv") ? "Swedish" : e.startsWith("tg") ? "Tajik" : e.startsWith("ta") ? "Tamil" : e.startsWith("tt") ? "Tatar" : e.startsWith("te") ? "Telugu" : e.startsWith("th") ? "Thai" : e.startsWith("tr") ? "Turkish" : e.startsWith("tk") ? "Turkmen" : e.startsWith("uk") ? "Ukrainian" : e.startsWith("ur") ? "Urdu" : e.startsWith("ug") ? "Uyghur" : e.startsWith("uz") ? "Uzbek" : e.startsWith("vi") ? "Vietnamese" : e.startsWith("cy") ? "Welsh" : e.startsWith("fy") ? "Western Frisian" : e.startsWith("xh") ? "Xhosa" : e.startsWith("yi") ? "Yiddish" : e.startsWith("yo") ? "Yoruba" : e.startsWith("zu") ? "Zulu" : "System"
-	}
-
-	function h() {
-    	if ("/watch" === location.pathname) {
-        	let e = location.search.match(/v=(.+?)(&|%|$)/);
-        	if (e) return e[1]
-    	}
-	}
-
-	function m() {
-    	if (s === location.href) return;
-    	s = location.href, i = null,
-        	function() {
-            	let e = h();
-            	e && safari.extension.dispatchMessage("youtube", {
-                	videoId: e
-            	})
-        	}();
-    	let e = document.querySelector("#vinegar-toolbar");
-    	e && e.remove(), document.querySelectorAll("video[vinegared]").forEach((e => {
-        	e.remove()
-    	}))
-	}
-
-	function p(e, t, a) {
-    	let r = document.createElement("a");
-    	return r.classList.add("button", t.toLowerCase()), r.textContent = t, r.addEventListener("click", a), e.appendChild(r), r
-	}
-
-	function y(e, a, r, n, s) {
-    	let i = document.createElement("a");
-    	i.classList.add("button"), i.textContent = n, i.setAttribute("data-quality", s), t === s && i.classList.add("active"), i.addEventListener("click", (i => {
-        	var o;
-        	i.stopPropagation(), i.preventDefault(), t = o = s, safari.extension.dispatchMessage("updateQuality", {
-            	quality: o
-        	}), v(e, r), a.querySelectorAll("[data-quality]").forEach((e => {
-            	e.remove()
-        	})), a.querySelector(".quality").textContent = n, a.querySelector(".left").classList.remove("hidden"), a.querySelector(".right").classList.remove("hidden")
-    	})), a.appendChild(i)
-	}
-
-	function v(e, t) {
-    	let a = e.paused,
-        	r = e.currentTime;
-    	e.pause(), e.src = t, e.load(), e.addEventListener("canplay", (t => {
-        	e.currentTime = r, a || e.play()
-    	}), {
-        	once: !0
-    	})
-	}
-
-	function g(e, t) {
-    	e.currentTime = Math.max(e.currentTime - t, 0)
-	}
-
-	function f(e, t) {
-    	e.currentTime = Math.min(e.currentTime + t, e.duration)
-	}
-
-	function b() {
-    	E("\n  	(() => {\n    	let hotkeys = document.querySelector('yt-Hotkey-Manager');\n    	hotkeys.toggleTheaterMode();\n  	})();\n  	")
-	}
-
-	function W(e, t) {
-    	e.currentTime = e.duration * t / 100
-	}
-
-	function k() {
-    	E("\n  	(() => {\n    	let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n    	if (player) {\n      	player.nextVideo();\n    	}\n  	})();\n  	")
-	}
-
-	function E(e) {
-    	let t = document.createElement("script");
-    	t.innerHTML = e, (document.head || document.documentElement).prepend(t), setTimeout((() => {
-        	t.remove()
-    	}), 100)
-	}
-	if (void 0 === window.injected && (window.injected = !0, E('\n  	(()=>{window.addEventListener("keydown",(e=>{if("INPUT"==e.target.tagName||"SELECT"==e.target.tagName||"TEXTAREA"==e.target.tagName||e.target.isContentEditable)return;if(e.altKey||e.ctrlKey||e.metaKey)return;let t=e.key.toLowerCase();"cfijklmt,. <0123456789>".includes(t)&&(e.stopImmediatePropagation()," "===t&&e.preventDefault())}),!0);let e=new MutationObserver((e=>{e.forEach((e=>{let t=e.target;t.controls||(t.controls=!0)}))}));function t(){let e=document.querySelectorAll("#contents > ytd-rich-item-renderer ytd-display-ad-renderer");0!==e.length&&e.forEach((e=>{if(e.parentNode&&e.parentNode.parentNode){let t=e.parentNode.parentNode;"YTD-RICH-ITEM-RENDERER"===t.tagName&&(t.style.display="none")}}))}function r(){if(!document.querySelector(".ad-showing"))return;let e=document.querySelectorAll("video:not([vinegared])");0!==e.length&&e.forEach((e=>{e.duration&&(e.currentTime=e.duration,setTimeout((()=>{let e=document.querySelector("button.ytp-ad-skip-button");e&&e.click()}),100))}))}function o(){let t=document.querySelector("video[vinegared]:not([vinegared-once])");if(!t)return;let r=t.closest("div");r&&r.setAttribute("vinegar-container",!0),t.controls=!0,t.hasAttribute("vinegar-fallback")&&e.observe(t,{attributes:!0,attributeFilter:["controls"]}),t.addEventListener("click",(e=>{e.stopPropagation()})),t.addEventListener("dblclick",(e=>{e.stopPropagation()})),t.addEventListener("contextmenu",(e=>{e.stopPropagation()})),t.setAttribute("vinegared-once",!0)}function n(){if(!document.querySelector("video[vinegared]"))return;let e=document.querySelectorAll("video:not([vinegared])");0!==e.length&&e.forEach((e=>{e.remove()}))}function a(){let t=document.querySelector("video:not([vinegared-once])");if(!t)return;let r=t.closest("div");r&&r.setAttribute("vinegar-container",!0),t.controls=!0,e.observe(t,{attributes:!0,attributeFilter:["controls"]}),t.addEventListener("contextmenu",(e=>{e.stopPropagation()})),t.addEventListener("play",(e=>{let t=document.querySelector(".ytp-chrome-top");t&&t.classList.remove("paused")})),t.addEventListener("pause",(e=>{let t=document.querySelector(".ytp-chrome-top");t&&t.classList.add("paused")})),t.addEventListener("ended",(e=>{t.removeAttribute("vinegared")})),t.setAttribute("vinegared",!0),t.setAttribute("vinegared-once",!0)}location.pathname.startsWith("/embed/")?a():location.pathname.startsWith("/shorts/")||(t(),r(),o(),n()),new MutationObserver((e=>{location.pathname.startsWith("/embed/")?a():location.pathname.startsWith("/shorts/")||(t(),r(),o(),n())})).observe(document.documentElement,{childList:!0,subtree:!0});let d=document.createElement("style");(document.head||document.documentElement).prepend(d);let i=d.sheet;i.insertRule(\'#__ffYoutube1,#__ffYoutube2,#__ffYoutube3,#__ffYoutube4,#feed-pyv-container,#feedmodule-PRO,#homepage-chrome-side-promo,#merch-shelf,#offer-module,#pla-shelf > ytd-pla-shelf-renderer[class="style-scope ytd-watch"],#pla-shelf,#premium-yva,#promo-info,#promo-list,#promotion-shelf,#related > ytd-watch-next-secondary-results-renderer > #items > ytd-compact-promoted-video-renderer.ytd-watch-next-secondary-results-renderer,#search-pva,#shelf-pyv-container,#video-masthead,#watch-branded-actions,#watch-buy-urls,#watch-channel-brand-div,#watch7-branded-banner,#YtKevlarVisibilityIdentifier,#YtSparklesVisibilityIdentifier,.carousel-offer-url-container,.companion-ad-container,.GoogleActiveViewElement,.list-view[style="margin: 7px 0pt;"],.promoted-sparkles-text-search-root-container,.promoted-videos,.searchView.list-view,.sparkles-light-cta,.watch-extra-info-column,.watch-extra-info-right,.ytd-carousel-ad-renderer,.ytd-compact-promoted-video-renderer,.ytd-companion-slot-renderer,.ytd-merch-shelf-renderer,.ytd-player-legacy-desktop-watch-ads-renderer,.ytd-promoted-sparkles-text-search-renderer,.ytd-promoted-video-renderer,.ytd-search-pyv-renderer,.ytd-video-masthead-ad-v3-renderer,.ytp-ad-action-interstitial-background-container,.ytp-ad-action-interstitial-slot,.ytp-ad-image-overlay,.ytp-ad-overlay-container,.ytp-ad-progress,.ytp-ad-progress-list,[class*="ytd-display-ad-"],[layout*="display-ad-"],a[href^="http://www.youtube.com/cthru?"],a[href^="https://www.youtube.com/cthru?"],ytd-action-companion-ad-renderer,ytd-banner-promo-renderer,ytd-compact-promoted-video-renderer,ytd-companion-slot-renderer,ytd-display-ad-renderer,ytd-promoted-sparkles-text-search-renderer,ytd-promoted-sparkles-web-renderer,ytd-search-pyv-renderer,ytd-single-option-survey-renderer,ytd-video-masthead-ad-advertiser-info-renderer,ytd-video-masthead-ad-v3-renderer,YTM-PROMOTED-VIDEO-RENDERER,.video-ads{display:none !important;}\',i.cssRules.length)})();\n  	'), safari.extension.dispatchMessage("refreshSettings"), safari.self.addEventListener("message", (s => {
-        	if ("youtubeSuccess" === s.name) {
-            	o(s.message.response)
-        	} else if ("settings" === s.name) {
-            	let i = s.message;
-            	e = i.autoplay, t = i.quality, a = i.fallback, r = i.showToolbar, n = i.subtitles
-        	}
-    	}))), void 0 === window.mutationObserved) {
-    	window.mutationObserved = !0, new MutationObserver((e => {
-        	m()
-    	})).observe(document.documentElement, {
-        	childList: !0,
-        	subtree: !0
-    	}), document.addEventListener("keyup", (e => {
-        	if ("INPUT" == e.target.tagName || "SELECT" == e.target.tagName || "TEXTAREA" == e.target.tagName || e.target.isContentEditable) return;
-        	let t = document.querySelector("video[vinegared]");
-        	if (t && !(e.altKey || e.ctrlKey || e.metaKey)) switch (e.key.toLowerCase()) {
-            	case "c":
-                	! function(e) {
-                    	let t, a;
-                    	Array.from(e.textTracks).forEach((e => {
-                        	"showing" === e.mode && (t = e), e.label.startsWith("Auto-translated") && (a = e)
-                    	})), t ? t.mode = "disabled" : a.mode = "showing"
-                	}(t);
-                	break;
-            	case "i":
-                	! function(e) {
-                    	document.pictureInPictureElement ? document.exitPictureInPicture() : document.pictureInPictureEnabled && e.requestPictureInPicture()
-                	}(t);
-                	break;
-            	case "f":
-                	! function(e) {
-                    	document.fullscreenElement ? document.exitFullscreen && document.exitFullscreen() : e.requestFullscreen()
-                	}(t);
-                	break;
-            	case "j":
-                	g(t, 10);
-                	break;
-            	case "l":
-                	f(t, 10);
-                	break;
-            	case "arrowleft":
-                	g(t, 5);
-                	break;
-            	case "arrowright":
-                	f(t, 5);
-                	break;
-            	case ",":
-                	t.paused && g(t, 1 / 60);
-                	break;
-            	case ".":
-                	t.paused && f(t, 1 / 60);
-                	break;
-            	case "k":
-            	case " ":
-                	! function(e) {
-                    	e.paused ? (async () => {
-                        	try {
-                            	await e.play()
-                        	} catch (e) {}
-                    	})() : e.pause()
-                	}(t);
-                	break;
-            	case "m":
-                	! function(e) {
-                    	e.muted = !e.muted
-                	}(t);
-                	break;
-            	case "t":
-                	b();
-                	break;
-            	case "0":
-                	W(t, 0);
-                	break;
-            	case "1":
-                	W(t, 10);
-                	break;
-            	case "2":
-                	W(t, 20);
-                	break;
-            	case "3":
-                	W(t, 30);
-                	break;
-            	case "4":
-                	W(t, 40);
-                	break;
-            	case "5":
-                	W(t, 50);
-                	break;
-            	case "6":
-                	W(t, 60);
-                	break;
-            	case "7":
-                	W(t, 70);
-                	break;
-            	case "8":
-                	W(t, 80);
-                	break;
-            	case "9":
-                	W(t, 90);
-                	break;
-            	case "<":
-                	! function(e) {
-                    	e.playbackRate = Math.max(e.playbackRate - .25, .25)
-                	}(t);
-                	break;
-            	case ">":
-                	! function(e) {
-                    	e.playbackRate = Math.min(e.playbackRate + .25, 2)
-                	}(t)
-        	}
-    	}))
-	}
+    if (location.pathname.startsWith("/shorts/"))
+        return;
+    let e,
+        t,
+        a,
+        n,
+        i = !1,
+        r = "auto",
+        s = !1,
+        o = !0,
+        l = "system",
+        d = {},
+        u = 0;
+    function c(t) {
+        let i = document.querySelector("video.video-stream:not([vinegared])");
+        if (!i || i.closest("#video-preview") || parseInt(i.style.top) < 0)
+            return void setTimeout((() => {
+                c(t)
+            }), 50);
+        if (Number.isFinite(i.duration)) {
+            if (i.readyState < 3)
+                return void i.addEventListener("canplay", (e => {
+                    c(t)
+                }), {
+                    once: !0
+                })
+        } else if (Number.isNaN(i.duration))
+            return void i.addEventListener("durationchange", (e => {
+                c(t)
+            }), {
+                once: !0
+            });
+        if (n)
+            return;
+        n = t;
+        let o = i.cloneNode(!0);
+        i.replaceWith(o),
+        s ? function(t) {
+            e = new Hls,
+            function(t) {
+                e.on(Hls.Events.ERROR, ((a, n) => {
+                    if (n.fatal)
+                        if (console.log("handleUnplayableAdvancedStreams", n), n.type === Hls.ErrorTypes.MEDIA_ERROR)
+                            e.recoverMediaError();
+                        else
+                            e.destroy(),
+                            f(t);
+                    else
+                        n.type === Hls.ErrorTypes.NETWORK_ERROR && n.details === Hls.ErrorDetails.AUDIO_TRACK_LOAD_ERROR && ++u >= 3 && (e.destroy(), f(t))
+                }))
+            }(t),
+            e.loadSource(n.streamingData.hlsManifestUrl);
+            let a = {
+                "2160p": 3840,
+                "1440p": 2560,
+                "1080p": 1920,
+                "720p": 1280,
+                "480p": 854,
+                "360p": 640,
+                "240p": 426,
+                "144p": 256
+            };
+            e.once(Hls.Events.MANIFEST_LOADED, (() => {
+                let n = e.audioTracks.find((e => !e.name.endsWith("dubbed-auto")));
+                if (e.audioTracks.length > 1) {
+                    let t = "system" === l ? navigator.language : l;
+                    for (var i = 0; i < e.audioTracks.length; i++) {
+                        let a = e.audioTracks[i];
+                        if (!a.name.endsWith("dubbed-auto") && t.startsWith(a.lang)) {
+                            n = a,
+                            e.audioTrack = a.id;
+                            break
+                        }
+                    }
+                }
+                if ("best" === r)
+                    e.currentLevel = e.levels.length - 1;
+                else if ("audio" === r)
+                    e.loadSource(n.url);
+                else
+                    for (i = e.levels.length - 1; i >= 0; i--)
+                        if (e.levels[i].width === a[r]) {
+                            e.currentLevel = i;
+                            break
+                        }
+                e.attachMedia(t),
+                p(t)
+            }))
+        }(o) : function(e) {
+            let t = !1,
+                n = a.split("\n");
+            d.auto = h(n);
+            let i = [{
+                quality: "1080p",
+                resolution: "1920"
+            }, {
+                quality: "720p",
+                resolution: "1280"
+            }, {
+                quality: "480p",
+                resolution: "854"
+            }, {
+                quality: "360p",
+                resolution: "640"
+            }, {
+                quality: "240p",
+                resolution: "426"
+            }, {
+                quality: "144p",
+                resolution: "256"
+            }];
+            for (let a of i) {
+                let i = h(n, a.resolution);
+                i && (d[a.quality] = i, r !== a.quality && "best" !== r || t || (e.src = i, t = !0))
+            }
+            let s = function(e) {
+                let t;
+                for (let a of e)
+                    if (a.startsWith("#EXT-X-MEDIA") && a.includes("TYPE=AUDIO") && !a.includes("dubbed-auto")) {
+                        let e = a.match(/URI="(.+?)"/);
+                        e && (t = e[1])
+                    }
+                return t
+            }(n);
+            s && (d.audio = s, "audio" !== r || t || (e.src = s, t = !0));
+            t || (e.src = d.auto, t = !0);
+            e.load(),
+            p(e)
+        }(o)
+    }
+    function h(e, t) {
+        let a = !1,
+            n = !1,
+            i = [];
+        for (let r of e)
+            if (n)
+                n = !1,
+                i.push(r);
+            else if (r.startsWith("#EXTM3U") || r.startsWith("#EXT-X-INDEPENDENT-SEGMENTS"))
+                i.push(r);
+            else if (r.startsWith("#EXT-X-MEDIA") && r.includes("TYPE=AUDIO") && !r.includes("dubbed-auto"))
+                i.push(r);
+            else if (void 0 === t && r.includes("RESOLUTION=") || r.includes(`RESOLUTION=${t}x`)) {
+                let e = r.split("SUBTITLES="),
+                    t = e[0];
+                n = !0,
+                a = !0,
+                e.length > 1 ? i.push(`${t}CLOSED-CAPTIONS=NONE`) : i.push(t)
+            }
+        if (a) {
+            let e = i.join("\n");
+            return `data:application/vnd.apple.mpegURL;base64,${btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g, ((e, t) => String.fromCharCode("0x" + t))))}`
+        }
+        return !1
+    }
+    function m(e) {
+        if (console.log("handleExtensionError", e), document.querySelector("yt-player-error-message-renderer"))
+            return;
+        let t = document.querySelector("video");
+        E(),
+        P(t),
+        f(t)
+    }
+    function p(t) {
+        t.play(),
+        function(e) {
+            let t = y(location);
+            t >= 0 && (e.currentTime = t)
+        }(t),
+        t.setAttribute("vinegared", !0),
+        R("\n      (() => {\n        let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n        let video = document.querySelector('video[vinegared]');\n        if (player && video) {\n          player.addEventListener('resize', (e) => {\n            video.style.width = e.width + 'px';\n            video.style.height = e.height + 'px';\n          });\n\n          let size = player.getPlayerSize();\n          video.style.width = size.width + 'px';\n          video.style.height = size.height + 'px';\n        }\n      })();\n      "),
+        function(t) {
+            t.addEventListener("ended", (a => {
+                e && e.playingDate ? t.play() : i && D()
+            }))
+        }(t),
+        E(),
+        P(t),
+        function(e) {
+            let t,
+                a=n.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+            if (!a)
+                return;
+            a.forEach((t => {
+                let a = document.createElement("track");
+                a.label = t.name.runs[0].text,
+                a.kind = "subtitles",
+                a.srclang = t.languageCode,
+                a.src = `${t.baseUrl}&fmt=vtt`,
+                e.appendChild(a)
+            }));
+            let i = "system" === l ? navigator.language : l,
+                r = a.filter((e => "en" === e.languageCode));
+            t = r.length > 0 ? r[0] : a[0];
+            let s = document.createElement("track");
+            s.label = `Auto-translated (${g(i)})`,
+            s.kind = "subtitles",
+            s.srclang = i,
+            g(t.languageCode) === g(i) ? s.src = `${t.baseUrl}&fmt=vtt` : s.src = `${t.baseUrl}&fmt=vtt&tlang=${i}`;
+            e.appendChild(s)
+        }(t),
+        R("\n      (() => {\n        let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n        if (player) {\n          player.mute();\n          player.pauseVideo();\n        }\n      })();\n      "),
+        function(e) {
+            let t = 0;
+            e.addEventListener("timeupdate", (a => {
+                Math.abs(e.currentTime - t) < 1 || (t = e.currentTime, "" !== navigator.mediaSession.metadata.title && I(e), R(`\n        (() => {\n          let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n          if (player) {\n            player.seekTo(${t});\n            player.mute();\n            player.pauseVideo();\n          }\n        })();\n        `))
+            }))
+        }(t),
+        I(t)
+    }
+    function f(e) {
+        e.addEventListener("error", (t => {
+            !function(e) {
+                e.remove(),
+                v("Vinegar Off", "YouTube returned an error instead of a valid video stream, so Vinegar has temporarily turned itself off to protect your account. This is to ensure your account remains safe and avoids any potential issues. If you have the option to change your IP address (such as turning off iCloud Private Relay or using Cloudflare WARP), you can try that to see if it resolves the issue. Thank you for your understanding and patience."),
+                R(`\n      (() => {\n        let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n        if (player) {\n          player.loadVideoById('${b(location)}', ${y(location)}, '${function() {switch (r) {case "144p":return "tiny";case "240p":return "small";case "360p":return "medium";case "480p":return "large";case "720p":return "hd720";case "1080p":return "hd1080";case "1440p":return "hd1440";case "2160p":return "hd2160";default:return "auto"}}()}');\n          player.unMute();\n\n          function showControls() {\n            let video = document.querySelector('video');\n            if (video) {\n              video.setAttribute('vinegar-fallback', true);\n              video.setAttribute('vinegared', true);\n            } else {\n              setTimeout(() => {\n                showControls();\n              }, 1000);\n            }\n          }\n\n          showControls();\n        }\n      })();\n      `)
+            }(e)
+        }), {
+            once: !0
+        }),
+        v("Fallback", "YouTube returned an error instead of a valid video stream. To keep the video playing, Vinegar switched to an alternate stream."),
+        R("\n      (() => {\n        let video = document.querySelector('video[vinegared]');\n        if (video) {\n          video.src = ytInitialPlayerResponse.streamingData?.hlsManifestUrl;\n          video.play();\n        }\n      })();\n      ")
+    }
+    function v(e, t) {
+        let a = document.querySelector("#vinegar-toolbar .left .quality");
+        if (!a)
+            return;
+        let n = a.cloneNode(!0);
+        a.replaceWith(n),
+        n.textContent = `${r.charAt(0).toUpperCase()}${r.slice(1)} (${e})`,
+        n.addEventListener("click", (e => {
+            e.stopPropagation(),
+            e.preventDefault(),
+            alert(t)
+        }))
+    }
+    function y(e) {
+        let t = e.search.match(/t=(.+?)(&|$)/);
+        if (t) {
+            let e = t[1],
+                n = e.match(/^(\d+h)?(\d+m)?(\d+s)?$/),
+                i = e.match(/^\d+$/);
+            if (n) {
+                var a = 0;
+                return n[1] && (a += 60 * parseInt(n[1]) * 60), n[2] && (a += 60 * parseInt(n[2])), n[3] && (a += parseInt(n[3])), a
+            }
+            return i ? parseInt(i[0]) : -1
+        }
+        return -1
+    }
+    function g(e) {
+        return e.startsWith("af") ? "Afrikaans" : e.startsWith("sq") ? "Albanian" : e.startsWith("am") ? "Amharic" : e.startsWith("ar") ? "Arabic" : e.startsWith("hy") ? "Armenian" : e.startsWith("az") ? "Azerbaijani" : e.startsWith("bn") ? "Bangla" : e.startsWith("eu") ? "Basque" : e.startsWith("be") ? "Belarusian" : e.startsWith("bs") ? "Bosnian" : e.startsWith("bg") ? "Bulgarian" : e.startsWith("my") ? "Burmese" : e.startsWith("ca") ? "Catalan" : e.startsWith("ceb") ? "Cebuano" : e.startsWith("zh") ? "Chinese" : e.startsWith("co") ? "Corsican" : e.startsWith("hr") ? "Croatian" : e.startsWith("cs") ? "Czech" : e.startsWith("da") ? "Danish" : e.startsWith("nl") ? "Dutch" : e.startsWith("en") ? "English" : e.startsWith("eo") ? "Esperanto" : e.startsWith("et") ? "Estonian" : e.startsWith("tl") || e.startsWith("fil") ? "Filipino" : e.startsWith("fi") ? "Finnish" : e.startsWith("fr") ? "French" : e.startsWith("gl") ? "Galician" : e.startsWith("ka") ? "Georgian" : e.startsWith("de") ? "German" : e.startsWith("el") ? "Greek" : e.startsWith("gu") ? "Gujarati" : e.startsWith("ht") ? "Haitian Creole" : e.startsWith("haw") ? "Hawaiian" : e.startsWith("ha") ? "Hausa" : e.startsWith("iw") || e.startsWith("he") ? "Hebrew" : e.startsWith("hi") ? "Hindi" : e.startsWith("hmn") ? "Hmong" : e.startsWith("hu") ? "Hungarian" : e.startsWith("is") ? "Icelandic" : e.startsWith("ig") ? "Igbo" : e.startsWith("id") ? "Indonesian" : e.startsWith("ga") ? "Irish" : e.startsWith("it") ? "Italian" : e.startsWith("jp") ? "Japanese" : e.startsWith("jv") ? "Javanese" : e.startsWith("kn") ? "Kannada" : e.startsWith("kk") ? "Kazakh" : e.startsWith("km") ? "Khmer" : e.startsWith("rw") ? "Kinyarwanda" : e.startsWith("ko") ? "Korean" : e.startsWith("ku") ? "Kurdish" : e.startsWith("ky") ? "Kyrgyz" : e.startsWith("lo") ? "Lao" : e.startsWith("la") ? "Latin" : e.startsWith("lv") ? "Latvian" : e.startsWith("lt") ? "Lithuanian" : e.startsWith("lb") ? "Luxembourgish" : e.startsWith("mk") ? "Macedonian" : e.startsWith("mg") ? "Malagasy" : e.startsWith("ms") ? "Malay" : e.startsWith("ml") ? "Malayalam" : e.startsWith("mt") ? "Maltese" : e.startsWith("mi") ? "Maori" : e.startsWith("mr") ? "Marathi" : e.startsWith("mn") ? "Mongolian" : e.startsWith("ne") ? "Nepali" : e.startsWith("nb") || e.startsWith("nn") || e.startsWith("no") ? "Norwegian" : e.startsWith("ny") ? "Nyanja" : e.startsWith("or") ? "Odia" : e.startsWith("ps") ? "Pashto" : e.startsWith("fa") ? "Persian" : e.startsWith("pl") ? "Polish" : e.startsWith("pt") ? "Portuguese" : e.startsWith("pa") ? "Punjabi" : e.startsWith("ro") ? "Romanian" : e.startsWith("ru") ? "Russian" : e.startsWith("sm") ? "Samoan" : e.startsWith("gd") ? "Scottish Gaelic" : e.startsWith("sr") ? "Serbian" : e.startsWith("sn") ? "Shona" : e.startsWith("sd") ? "Sindhi" : e.startsWith("si") ? "Sinhala" : e.startsWith("sk") ? "Slovak" : e.startsWith("sl") ? "Slovenian" : e.startsWith("so") ? "Somali" : e.startsWith("st") ? "Southern Sotho" : e.startsWith("es") ? "Spanish" : e.startsWith("su") ? "Sudanese" : e.startsWith("sw") ? "Swahili" : e.startsWith("sv") ? "Swedish" : e.startsWith("tg") ? "Tajik" : e.startsWith("ta") ? "Tamil" : e.startsWith("tt") ? "Tatar" : e.startsWith("te") ? "Telugu" : e.startsWith("th") ? "Thai" : e.startsWith("tr") ? "Turkish" : e.startsWith("tk") ? "Turkmen" : e.startsWith("uk") ? "Ukrainian" : e.startsWith("ur") ? "Urdu" : e.startsWith("ug") ? "Uyghur" : e.startsWith("uz") ? "Uzbek" : e.startsWith("vi") ? "Vietnamese" : e.startsWith("cy") ? "Welsh" : e.startsWith("fy") ? "Western Frisian" : e.startsWith("xh") ? "Xhosa" : e.startsWith("yi") ? "Yiddish" : e.startsWith("yo") ? "Yoruba" : e.startsWith("zu") ? "Zulu" : "System"
+    }
+    function b(e) {
+        if ("/watch" === e.pathname) {
+            let t = e.search.match(/v=(.+?)(&|%|$)/);
+            if (t)
+                return t[1]
+        }
+    }
+    function W() {
+        if (t === location.href)
+            return;
+        t = location.href,
+        n = null,
+        async function() {
+            try {
+                let e = b(location);
+                if (!e)
+                    return;
+                let t = {
+                        context: {
+                            client: {
+                                clientName: "IOS",
+                                clientVersion: "19.45.4",
+                                deviceMake: "Apple",
+                                deviceModel: "iPhone16,2",
+                                userAgent: "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)",
+                                osName: "iPhone",
+                                osVersion: "18.1.0.22B83",
+                                hl: "en",
+                                timeZone: "UTC",
+                                utcOffsetMinutes: 0
+                            }
+                        }
+                    },
+                    n = "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+                    i = await fetch(n, {
+                        method: "POST",
+                        body: JSON.stringify(t)
+                    }),
+                    r = await i.json();
+                if (t = function(e, t) {
+                    return {
+                        context: {
+                            client: {
+                                clientName: "IOS",
+                                clientVersion: "19.45.4",
+                                deviceMake: "Apple",
+                                deviceModel: "iPhone16,2",
+                                userAgent: "com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 18_1_0 like Mac OS X;)",
+                                osName: "iPhone",
+                                osVersion: "18.1.0.22B83",
+                                hl: "en",
+                                timeZone: "UTC",
+                                utcOffsetMinutes: 0,
+                                visitorData: t
+                            }
+                        },
+                        videoId: e,
+                        playbackContext: {
+                            contentPlaybackContext: {
+                                html5Preference: "HTML5_PREF_WANTS"
+                            }
+                        },
+                        contentCheckOk: !0,
+                        racyCheckOk: !0
+                    }
+                }(e, r.responseContext.visitorData), i = await fetch(n, {
+                    method: "POST",
+                    body: JSON.stringify(t)
+                }), r = await i.json(), "OK"===r.playabilityStatus?.status) {
+                    if (!s) {
+                        let e = await fetch(r.streamingData.hlsManifestUrl);
+                        a = await e.text()
+                    }
+                    c(r)
+                } else
+                    m("Unable to find playable video stream.")
+            } catch (e) {
+                m(e.message)
+            }
+        }();
+        let e = document.querySelector("#vinegar-toolbar");
+        e && e.remove(),
+        document.querySelectorAll("video[vinegared]").forEach((e => {
+            e.remove()
+        }))
+    }
+    function E() {
+        o || document.querySelectorAll("#primary").forEach((e => {
+            e.setAttribute("notoolbar", !0)
+        }))
+    }
+    function k(e, t, a) {
+        let n = document.createElement("a");
+        return n.classList.add("button", t.toLowerCase()), n.textContent = t, n.addEventListener("click", a), e.appendChild(n), n
+    }
+    function T(e) {
+        r = e,
+        safari.extension.dispatchMessage("updateQuality", {
+            quality: e
+        })
+    }
+    function S(t, a) {
+        s ? function(t, a) {
+            let n = {
+                    3840: "2160p",
+                    2560: "1440p",
+                    1920: "1080p",
+                    1280: "720p",
+                    854: "480p",
+                    640: "360p",
+                    426: "240p",
+                    256: "144p"
+                },
+                i = function(t, a) {
+                    let n = {};
+                    for (var i = 0; i < t.length; i++) {
+                        let t = a[e.levels[i].width];
+                        t && (n[t] = i)
+                    }
+                    return n
+                }(e.levels, n);
+            L(t, a, -1, "Auto", "auto");
+            for (let [e, n] of Object.entries(i))
+                L(t, a, n, e, e);
+            !function(t, a) {
+                for (var n = 0; n < e.audioTracks.length; n++) {
+                    let i = e.audioTracks[n],
+                        r = e.audioTracks.length > 1 ? g(i.lang) : "Audio";
+                    w(t, a, r, "audio", (e => {
+                        e.stopPropagation(),
+                        e.preventDefault(),
+                        T("audio"),
+                        C(t, i.url),
+                        A(a, r)
+                    }))
+                }
+            }(t, a)
+        }(t, a) : function(e, t) {
+            ["auto", "144p", "240p", "360p", "480p", "720p", "1080p", "audio"].forEach((a => {
+                if (d[a]) {
+                    let n = `${a.charAt(0).toUpperCase()}${a.slice(1)}`;
+                    !function(e, t, a, n, i) {
+                        w(e, t, n, i, (r => {
+                            r.stopPropagation(),
+                            r.preventDefault(),
+                            T(i),
+                            function(e, t) {
+                                let a = e.paused,
+                                    n = e.currentTime;
+                                e.pause(),
+                                e.src = t,
+                                e.load(),
+                                e.addEventListener("canplay", (t => {
+                                    e.currentTime = n,
+                                    a || e.play()
+                                }), {
+                                    once: !0
+                                })
+                            }(e, a),
+                            A(t, n)
+                        }))
+                    }(e, t, d[a], n, a)
+                }
+            }))
+        }(t, a)
+    }
+    function w(e, t, a, n, i) {
+        let s = document.createElement("a");
+        s.classList.add("button"),
+        s.textContent = a,
+        s.setAttribute("data-quality", n),
+        r === n && s.classList.add("active"),
+        s.addEventListener("click", i),
+        t.appendChild(s)
+    }
+    function L(t, a, i, s, o) {
+        w(0, a, s, o, (l => {
+            l.stopPropagation(),
+            l.preventDefault();
+            let d = "audio" === r;
+            T(o),
+            d ? C(t, n.streamingData.hlsManifestUrl, i) : e.currentLevel = i,
+            A(a, s)
+        }))
+    }
+    function A(e, t) {
+        e.querySelectorAll("[data-quality]").forEach((e => {
+            e.remove()
+        })),
+        e.querySelector(".quality").textContent = t,
+        e.querySelector(".left").classList.remove("hidden"),
+        e.querySelector(".right").classList.remove("hidden")
+    }
+    function C(t, a, n) {
+        let i = t.paused,
+            r = t.currentTime;
+        t.pause(),
+        e.loadSource(a),
+        e.once(Hls.Events.MANIFEST_LOADED, (() => {
+            if (n) {
+                if (e.audioTracks.length > 1) {
+                    let t = "system" === l ? navigator.language : l;
+                    for (var a = 0; a < e.audioTracks.length; a++) {
+                        let n = e.audioTracks[a];
+                        if (t.startsWith(n.lang)) {
+                            e.audioTrack = n.id;
+                            break
+                        }
+                    }
+                }
+                e.currentLevel = n
+            }
+            t.currentTime = r,
+            i || t.play()
+        }))
+    }
+    function P(e) {
+        let t = document.createElement("div");
+        t.id = "vinegar-toolbar";
+        let a = document.createElement("div");
+        a.classList.add("left"),
+        t.appendChild(a);
+        let n,
+            i = document.createElement("div");
+        i.classList.add("right"),
+        t.appendChild(i),
+        k(a, "Quality", (n => {
+            n.stopPropagation(),
+            n.preventDefault(),
+            a.classList.add("hidden"),
+            i.classList.add("hidden"),
+            S(e, t)
+        })).textContent = `${r.charAt(0).toUpperCase()}${r.slice(1)}`,
+        k(i, "Loop", (t => {
+            t.stopPropagation(),
+            t.preventDefault();
+            let a = t.target;
+            e.loop ? (e.loop = !1, a.classList.remove("active")) : (e.loop = !0, a.classList.add("active"))
+        })),
+        k(i, "Replay", (t => {
+            t.stopPropagation(),
+            t.preventDefault(),
+            e.currentTime = 0
+        })),
+        k(i, "Theater", (e => {
+            e.stopPropagation(),
+            e.preventDefault(),
+            O()
+        })),
+        e.addEventListener("mousemove", (e => {
+            clearTimeout(n),
+            i.classList.add("showing"),
+            i.classList.remove("removing"),
+            n = setTimeout((() => {
+                i.classList.add("removing")
+            }), 3e3)
+        })),
+        e.addEventListener("mouseleave", (e => {
+            clearTimeout(n),
+            n = setTimeout((() => {
+                i.classList.remove("showing", "removing")
+            }), 100)
+        })),
+        i.addEventListener("mouseenter", (e => {
+            clearTimeout(n),
+            i.classList.add("showing"),
+            i.classList.remove("removing")
+        })),
+        i.addEventListener("mouseleave", (e => {
+            clearTimeout(n),
+            n = setTimeout((() => {
+                i.classList.remove("showing", "removing")
+            }), 100)
+        })),
+        e.closest("div").insertBefore(t, e)
+    }
+    function I(e) {
+        navigator.mediaSession.metadata = new MediaMetadata,
+        navigator.mediaSession.setActionHandler("play", null),
+        navigator.mediaSession.setActionHandler("pause", null),
+        navigator.mediaSession.setActionHandler("seekbackward", null),
+        navigator.mediaSession.setActionHandler("seekforward", null),
+        navigator.mediaSession.setActionHandler("previoustrack", null),
+        navigator.mediaSession.setActionHandler("nexttrack", null),
+        navigator.mediaSession.setActionHandler("play", (async () => {
+            await e.play()
+        })),
+        navigator.mediaSession.setActionHandler("pause", (() => {
+            e.pause()
+        })),
+        navigator.mediaSession.setActionHandler("seekbackward", (() => {
+            M(e, 10)
+        })),
+        navigator.mediaSession.setActionHandler("seekforward", (() => {
+            N(e, 10)
+        })),
+        navigator.mediaSession.setActionHandler("previoustrack", (() => {
+            R("\n      (() => {\n        let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n        if (player) {\n          player.previousVideo();\n        }\n      })();\n      ")
+        })),
+        navigator.mediaSession.setActionHandler("nexttrack", (() => {
+            D()
+        }))
+    }
+    function M(e, t) {
+        e.currentTime = Math.max(e.currentTime - t, 0)
+    }
+    function N(e, t) {
+        e.currentTime = Math.min(e.currentTime + t, e.duration)
+    }
+    function O() {
+        R("\n      (() => {\n        let hotkeys = document.querySelector('yt-Hotkey-Manager');\n        if (hotkeys) hotkeys.toggleTheaterMode();\n      })();\n      ")
+    }
+    function q(e, t) {
+        e.currentTime = e.duration * t / 100
+    }
+    function D() {
+        R("\n      (() => {\n        let player = document.getElementById('movie_player') || document.getElementsByClassName('html5-video-player')[0];\n        if (player) {\n          player.nextVideo();\n        }\n      })();\n      ")
+    }
+    function R(e) {
+        let t = document.createElement("script");
+        t.innerHTML = e,
+        (document.head || document.documentElement).prepend(t),
+        setTimeout((() => {
+            t.remove()
+        }), 100)
+    }
+    if (void 0 === window.injected && (window.injected = !0, R('\n      (()=>{window.addEventListener("keydown",(e=>{if("INPUT"==e.target.tagName||"SELECT"==e.target.tagName||"TEXTAREA"==e.target.tagName||e.target.isContentEditable)return;if(e.altKey||e.ctrlKey||e.metaKey)return;let t=e.key.toLowerCase();"cfijklmt,. <>".includes(t)&&(e.stopImmediatePropagation()," "===t&&e.preventDefault())}),!0);let e=new MutationObserver((e=>{e.forEach((e=>{let t=e.target;t.controls||(t.controls=!0)}))})),t=DOMTokenList.prototype.add;function o(){let t=document.querySelector("video[vinegared]:not([vinegared-once])");if(!t)return;let o=t.closest("div");o&&o.setAttribute("vinegar-container",!0),t.controls=!0,t.hasAttribute("vinegar-fallback")&&e.observe(t,{attributes:!0,attributeFilter:["controls"]}),t.addEventListener("click",(e=>{e.stopPropagation()})),t.addEventListener("dblclick",(e=>{e.stopPropagation()})),t.addEventListener("contextmenu",(e=>{e.stopPropagation()})),t.setAttribute("vinegared-once",!0)}function r(){let t=document.querySelector("video:not([vinegared-once])");if(!t)return;let o=t.closest("div");o&&o.setAttribute("vinegar-container",!0),t.controls=!0,e.observe(t,{attributes:!0,attributeFilter:["controls"]}),t.addEventListener("contextmenu",(e=>{e.stopPropagation()})),t.addEventListener("play",(e=>{let t=document.querySelector(".ytp-chrome-top, .ytwPlayerTopControlsHost");t&&t.classList.remove("paused")})),t.addEventListener("pause",(e=>{let t=document.querySelector(".ytp-chrome-top, .ytwPlayerTopControlsHost");t&&t.classList.add("paused")})),t.addEventListener("ended",(e=>{t.removeAttribute("vinegared")})),t.setAttribute("vinegared",!0),t.setAttribute("vinegared-once",!0)}DOMTokenList.prototype.add=function(...e){if(t.apply(this,e),"ad-created"===e[0]){let e=document.querySelector("#movie_player");if(e){let t=e.getPlayerResponse();t.playerAds&&(t.playerAds=[]),t.adPlacements&&(t.adPlacements=[]),t.adSlots&&(t.adSlots=[])}}},location.pathname.startsWith("/embed/")?(window.addEventListener("click",(e=>{if(e.metaKey)return;let t=e.composedPath();for(let o of t)if(1===o.nodeType&&"A"===o.nodeName&&o.hasAttribute("href")){if(o.isContentEditable)return;e.preventDefault(),window.open(o.href,"_blank")}}),!0),r()):location.pathname.startsWith("/shorts/")||o(),new MutationObserver((e=>{location.pathname.startsWith("/embed/")?r():location.pathname.startsWith("/shorts/")||o()})).observe(document.documentElement,{childList:!0,subtree:!0})})();\n      '), safari.extension.dispatchMessage("refreshSettings"), safari.self.addEventListener("message", (e => {
+        if ("settings" === e.name) {
+            let t = e.message;
+            i = t.autoplay,
+            r = t.quality,
+            s = t.advanced,
+            o = t.showToolbar,
+            l = t.subtitles
+        }
+    }))), void 0 === window.mutationObserved) {
+        window.mutationObserved = !0,
+        window.addEventListener("click", (e => {
+            if (e.metaKey)
+                return;
+            let t = e.composedPath();
+            for (let a of t)
+                if (1 === a.nodeType && "A" === a.nodeName && a.hasAttribute("href")) {
+                    if (a.isContentEditable)
+                        return;
+                    let t = new URL(a.href);
+                    if ("/watch" === t.pathname)
+                        if (e.stopImmediatePropagation(), e.preventDefault(), b(t) === b(location)) {
+                            let e = y(t);
+                            if (e >= 0) {
+                                let t = document.querySelector("video[vinegared]");
+                                t && (t.currentTime = e)
+                            }
+                        } else
+                            location.href = a.href;
+                    else
+                        t.pathname.startsWith("/shorts") && (e.stopImmediatePropagation(), e.preventDefault(), location.href = a.href)
+                }
+        }), !0),
+        new MutationObserver((e => {
+            W()
+        })).observe(document.documentElement, {
+            childList: !0,
+            subtree: !0
+        }),
+        window.addEventListener("keyup", (e => {
+            if ("INPUT" == e.target.tagName || "SELECT" == e.target.tagName || "TEXTAREA" == e.target.tagName || e.target.isContentEditable)
+                return;
+            let t = document.querySelector("video[vinegared]");
+            if (t && !(e.altKey || e.ctrlKey || e.metaKey))
+                switch (e.stopImmediatePropagation(), e.key.toLowerCase()) {
+                case "c":
+                    !function(e) {
+                        let t,
+                            a;
+                        Array.from(e.textTracks).forEach((e => {
+                            "showing" === e.mode && (t = e),
+                            e.label.startsWith("Auto-translated") && (a = e)
+                        })),
+                        t ? t.mode = "disabled" : a.mode = "showing"
+                    }(t);
+                    break;
+                case "i":
+                    !function(e) {
+                        document.pictureInPictureElement ? document.exitPictureInPicture() : document.pictureInPictureEnabled && e.requestPictureInPicture()
+                    }(t);
+                    break;
+                case "f":
+                    !function(e) {
+                        document.fullscreenElement ? document.exitFullscreen && document.exitFullscreen() : e.requestFullscreen()
+                    }(t);
+                    break;
+                case "j":
+                    M(t, 10);
+                    break;
+                case "l":
+                    N(t, 10);
+                    break;
+                case "arrowleft":
+                    M(t, 5);
+                    break;
+                case "arrowright":
+                    N(t, 5);
+                    break;
+                case ",":
+                    t.paused && M(t, 1 / 60);
+                    break;
+                case ".":
+                    t.paused && N(t, 1 / 60);
+                    break;
+                case "k":
+                case " ":
+                    !function(e) {
+                        e.paused ? (async () => {
+                            try {
+                                await e.play()
+                            } catch (e) {}
+                        })() : e.pause()
+                    }(t);
+                    break;
+                case "m":
+                    !function(e) {
+                        e.muted = !e.muted
+                    }(t);
+                    break;
+                case "t":
+                    O();
+                    break;
+                case "<":
+                    !function(e) {
+                        e.playbackRate = Math.max(e.playbackRate - .25, .25)
+                    }(t);
+                    break;
+                case ">":
+                    !function(e) {
+                        e.playbackRate = Math.min(e.playbackRate + .25, 2)
+                    }(t)
+                }
+        }), !0),
+        window.addEventListener("keydown", (e => {
+            if ("INPUT" == e.target.tagName || "SELECT" == e.target.tagName || "TEXTAREA" == e.target.tagName || e.target.isContentEditable)
+                return;
+            let t = document.querySelector("video[vinegared]");
+            if (!t)
+                return;
+            if (e.altKey || e.ctrlKey || e.metaKey)
+                return;
+            let a = e.key.toLowerCase();
+            switch ("0123456789".includes(a) && e.stopImmediatePropagation(), a) {
+            case "0":
+                q(t, 0);
+                break;
+            case "1":
+                q(t, 10);
+                break;
+            case "2":
+                q(t, 20);
+                break;
+            case "3":
+                q(t, 30);
+                break;
+            case "4":
+                q(t, 40);
+                break;
+            case "5":
+                q(t, 50);
+                break;
+            case "6":
+                q(t, 60);
+                break;
+            case "7":
+                q(t, 70);
+                break;
+            case "8":
+                q(t, 80);
+                break;
+            case "9":
+                q(t, 90)
+            }
+        }), !0)
+    }
 })();
