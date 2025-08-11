@@ -12,7 +12,7 @@
 
 (function() {
     'use strict';
-    const originalFavicon = 'https://scontent-lax3-1.xx.fbcdn.net/v/t1.15752-9/480817344_1152606983233583_7896116075902917274_n.png?_nc_cat=104&ccb=1-7&_nc_sid=9f807c&_nc_ohc=94Z2TDDESWUQ7kNvgG3sqyS&_nc_oc=AdjzD9QODa-0_1-MTZwW7SIfjo0n9IsEpB_z0wXZ_rWPaaopGbmi12I79VgwmYPeIl4&_nc_zt=23&_nc_ht=scontent-lax3-1.xx&oh=03_Q7cD1gGSsXPROj40lgcGFfT_pEVEnL8RT_mV8n4qZuPE-JuC6g&oe=67E743F9'
+    const originalFavicon = 'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.15752-9/528039451_24035391102799906_1825240269288145231_n.png?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_ohc=6fm_h5Yjr1EQ7kNvwHrc--V&_nc_oc=AdmFphHsmQ6aPVZj0pkP2Wb4TDSoHR8yc0XZEhvTESNwQ67vwnL91zJ6lv7Kn4jM86IrPIfVCj_-eckqYKIjxCLC&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&oh=03_Q7cD3AGpd3hNVfzPIhS26pW_MVLt_pwbT5Hd18QDbV2QerCfIA&oe=68C0B9EE';
 
     const faviconLink = document.querySelector('link[rel="shortcut icon"]');
 
