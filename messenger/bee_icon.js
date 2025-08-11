@@ -12,7 +12,7 @@
 
 (function() {
     'use strict';
-    const originalFavicon = 'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.15752-9/528039451_24035391102799906_1825240269288145231_n.png?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_ohc=6fm_h5Yjr1EQ7kNvwHrc--V&_nc_oc=AdmFphHsmQ6aPVZj0pkP2Wb4TDSoHR8yc0XZEhvTESNwQ67vwnL91zJ6lv7Kn4jM86IrPIfVCj_-eckqYKIjxCLC&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&oh=03_Q7cD3AGpd3hNVfzPIhS26pW_MVLt_pwbT5Hd18QDbV2QerCfIA&oe=68C0B9EE';
+    const originalFavicon = 'https://scontent-sjc3-1.xx.fbcdn.net/v/t1.15752-9/527666362_1304318201076971_5041916544845737421_n.png?_nc_cat=100&ccb=1-7&_nc_sid=9f807c&_nc_ohc=9UfeTkLGf2EQ7kNvwGoa0EX&_nc_oc=AdnEIfZrPGIddQ7owvbJ4yK9m3hP8rNnl42VqB78rgrA5ChFXXB_tgXv_Jt2TNxnvZqwQ5P3aHIV7brVaSOXnRF6&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&oh=03_Q7cD3AENC8K0fp8_TO6WjCzup8ec7LjmQfakrLdtgYVK23CTfQ&oe=68C09CC4';
 
     const faviconLink = document.querySelector('link[rel="shortcut icon"]');
 
