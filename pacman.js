@@ -1,81 +1,66 @@
 // ==UserScript==
-// @name         New Userscript
-// @namespace	https://dev.mooibee.us
-// @version      2025-02-20
-// @description  try to take over the world!
+// @name         Pac-Man Vim Keys & Auto-Pause
+// @namespace    https://dev.mooibee.us
+// @version      2025-10-10
+// @description  Remaps h,j,k,l to arrow keys and auto-pauses the game on tab switch.
 // @author       You
 // @match        https://freepacman.org/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=freepacman.org
 // @grant        none
 // ==/UserScript==
 
-/*
-keydown { target: body
-, key: "ArrowLeft", charCode: 0, keyCode: 37 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "ArrowUp", charCode: 0, keyCode: 38 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "ArrowRight", charCode: 0, keyCode: 39 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "ArrowDown", charCode: 0, keyCode: 40 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "h", charCode: 0, keyCode: 72 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "j", charCode: 0, keyCode: 74 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "k", charCode: 0, keyCode: 75 }
-New-Userscript.user.js:19:17
-keydown { target: body
-, key: "l", charCode: 0, keyCode: 76 }
-New-Userscript.user.js:19:17
-*/
-
 (function() {
     'use strict';
 
-    document.addEventListener('keydown', function(event) {
-        let keyToSimulate = null, key_code = 0;
+    /**
+     * Creates and dispatches a keyboard event on the document body.
+     * @param {string} key - The key value of the event (e.g., 'ArrowLeft', 'Escape').
+     * @param {number} keyCode - The numerical key code for the event.
+     */
+    function simulateKeyPress(key, keyCode) {
+        const event = new KeyboardEvent('keydown', {
+            key: key,
+            keyCode: keyCode,
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+        document.body.dispatchEvent(event);
+    }
 
-        switch (event.key) {
-            case 'h': // Left arrow
-                keyToSimulate = 'ArrowLeft';
-                key_code = 37;
-                break;
-            case 'j': // Down arrow
-                keyToSimulate = 'ArrowDown';
-                key_code = 40;
-                break;
-            case 'k': // Up arrow
-                keyToSimulate = 'ArrowUp';
-                key_code = 38;
-                break;
-            case 'l': // Right arrow
-                keyToSimulate = 'ArrowRight';
-                key_code = 39;
-                break;
+    // --- Key Remapping Logic (h,j,k,l to Arrows) ---
+
+    const keyMap = {
+        'h': { key: 'ArrowLeft',  keyCode: 37 }, // Left
+        'j': { key: 'ArrowDown',  keyCode: 40 }, // Down
+        'k': { key: 'ArrowUp',    keyCode: 38 }, // Up
+        'l': { key: 'ArrowRight', keyCode: 39 }  // Right
+    };
+
+    document.addEventListener('keydown', (event) => {
+        // Check if the pressed key is one we need to remap.
+        const mapping = keyMap[event.key];
+        if (mapping) {
+            // Prevent the default browser action for the key (e.g., scrolling).
+            event.preventDefault();
+            // Simulate the corresponding arrow key press.
+            simulateKeyPress(mapping.key, mapping.keyCode);
         }
+    });
 
-        if (keyToSimulate) {
-            console.log("Key %s pressed, simulating %s", event.key, keyToSimulate);
-            event.preventDefault(); // Prevent default behavior of h,j,k,l
+    // --- Auto Pause/Unpause Logic ---
 
-            // Create and dispatch a new KeyboardEvent for the arrow key
-            let arrowEvent = new KeyboardEvent('keydown', {
-                key: keyToSimulate,
-                keyCode: key_code,
+    // When the tab loses focus (e.g., you switch to another window),
+    // send 'Escape' to pause the game.
+    window.addEventListener('blur', () => {
+        console.log('Tab lost focus. Simulating Escape key to pause.');
+        simulateKeyPress('Escape', 27);
+    });
 
-                bubbles: true, // Allow event to bubble up the DOM tree
-                cancelable: true, // Allow event to be cancelled
-                view: window // Set the view to the current window
-            });
-            document.body.dispatchEvent(arrowEvent); // Dispatch the event on the document body
-        }
+    // When the tab regains focus, send 'Escape' again to unpause.
+    window.addEventListener('focus', () => {
+        console.log('Tab gained focus. Simulating Escape key to unpause.');
+        simulateKeyPress('Escape', 27);
     });
 
 })();
